@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 
 import clsx from "clsx";
 import Link from "next/link";
-import Head from "next/head";
 
 //material ui core
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -26,11 +25,10 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Sundaya from "public/images/sundaya.png";
 import SundayaText from "public/images/sundaya-text.png";
 
-//components OR parts
-import Apt1 from "@components/ListPages/apt1";
-import { Grid } from "@material-ui/core";
+//components OR parts local
+import BreadcrumbsComponen from "./BreadcrumbsComponen";
 
-const drawerWidth = 200;
+const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     padding: theme.spacing(0, 1),
-    minHeight: 48,
+    minHeight: 55,
     // necessary for content to be below app bar
     // ...theme.mixins.toolbar,
     justifyContent: "flex-end",
@@ -115,12 +113,6 @@ const DrawerHeader = ({ listPage, mainPage }) => {
 
   return (
     <div className={classes.root}>
-      <Head>
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/icon?family=Material+Icons"
-        />
-      </Head>
       <CssBaseline />
       <AppBar
         position="fixed"
@@ -138,15 +130,7 @@ const DrawerHeader = ({ listPage, mainPage }) => {
           >
             <MenuIcon />
           </IconButton>
-          <Link href="/">
-            <a>
-              <img
-                src={Sundaya}
-                alt="sundaya"
-                style={{ height: 30, marginTop: 5 }}
-              />
-            </a>
-          </Link>
+          <BreadcrumbsComponen />
         </Toolbar>
       </AppBar>
       <Drawer
@@ -161,7 +145,7 @@ const DrawerHeader = ({ listPage, mainPage }) => {
         <div className={classes.drawerHeader}>
           <List>
             <img
-              src={SundayaText}
+              src={Sundaya}
               alt="sundaya"
               style={{ height: 30, marginTop: 5 }}
             />

@@ -1,17 +1,19 @@
 import React from "react";
-import { Field, reduxForm } from "redux-form";
-import TextField from "@material-ui/core/TextField";
-import { makeStyles } from "@material-ui/core/styles";
 
+//material ui core
+import TextField from "@material-ui/core/TextField";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
+import { makeStyles } from "@material-ui/core/styles";
+import { Button, DialogActions } from "@material-ui/core";
+
 import asyncValidate from "./asyncValidate";
 import { connect } from "react-redux";
-import { Button, DialogActions } from "@material-ui/core";
+import { Field, reduxForm } from "redux-form";
 
 const validate = (values) => {
   const errors = {};
@@ -100,7 +102,6 @@ const useStyles = makeStyles({
 });
 
 function MaterialUiForm(props) {
-  const classes = useStyles();
   const { handleSubmit, pristine, submitting } = props;
 
   return (
@@ -109,12 +110,7 @@ function MaterialUiForm(props) {
       <Field name="site" component={renderTextField} label="SITE" />
       <Field name="provinsi" component={renderTextField} label="PROVINSI" />
 
-      <Field
-        classes={classes}
-        name="lc"
-        label="LC"
-        component={renderSelectField}
-      >
+      <Field name="lc" label="LC" component={renderSelectField}>
         <option value="" />
         <option value={"TELKOM"}>TELKOM</option>
         <option value={"IFORTE"}>IFORTE</option>
@@ -122,12 +118,7 @@ function MaterialUiForm(props) {
         <option value={"IPT"}>IPT</option>
       </Field>
 
-      <Field
-        classes={classes}
-        name="mitra"
-        component={renderSelectField}
-        label="MITRA"
-      >
+      <Field name="mitra" component={renderSelectField} label="MITRA">
         <option value="" />
         <option value={"Valtel"}>Valtel</option>
         <option value={"Ecom"}>Ecom</option>
@@ -137,25 +128,23 @@ function MaterialUiForm(props) {
       </Field>
 
       <Field name="ip" component={renderTextField} label="IP" />
-      <Field name="latitude" component={renderTextField} label="LATITUDE" />
-      <Field name="longitude" component={renderTextField} label="longitude" />
-      <Field name="id_lvdvsat" component={renderTextField} label="id_lvdvsat" />
-      <Field name="id_ping" component={renderTextField} label="id_ping" />
-      <Field name="id_batvolt" component={renderTextField} label="id_batvolt" />
+      <Field name="latitude" component={renderTextField} label="Latitude" />
+      <Field name="longitude" component={renderTextField} label="Longitude" />
+      <Field name="id_lvdvsat" component={renderTextField} label="Id_lvdvsat" />
+      <Field name="id_ping" component={renderTextField} label="Id_ping" />
       <Field
         name="id_vsatcurr"
         component={renderTextField}
-        label="id_vsatcurr"
+        label="Id_vsatcurr"
       />
 
-      <Field name="id_btscurr" component={renderTextField} label="id_btscurr" />
+      <Field name="id_btscurr" component={renderTextField} label="Id_btscurr" />
 
       <DialogActions>
         <Button
           type="submit"
           disabled={pristine || submitting}
           variant="contained"
-          // onClick={handleClose}
           color="primary"
         >
           Save changes

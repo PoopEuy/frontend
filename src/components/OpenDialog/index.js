@@ -1,15 +1,18 @@
 import React from "react";
-import { withStyles } from "@material-ui/core/styles";
 import Proptypes from "prop-types";
-import Button from "@material-ui/core/Button";
+import { useRouter } from "next/router";
+
+//material ui core
+import { withStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import MuiDialogContent from "@material-ui/core/DialogContent";
 import MuiDialogActions from "@material-ui/core/DialogActions";
 import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
-import { useRouter } from "next/router";
 import Typography from "@material-ui/core/Typography";
+
+//material ui Icons
+import CloseIcon from "@material-ui/icons/Close";
 
 const styles = (theme) => ({
   root: {
@@ -24,23 +27,24 @@ const styles = (theme) => ({
   },
 });
 
-const DialogTitle = withStyles(styles)((props) => {
-  const { children, classes, onClose, ...other } = props;
-  return (
-    <MuiDialogTitle disableTypography className={classes.root} {...other}>
-      <Typography variant="h6">{children}</Typography>
-      {onClose ? (
-        <IconButton
-          aria-label="close"
-          className={classes.closeButton}
-          onClick={onClose}
-        >
-          <CloseIcon />
-        </IconButton>
-      ) : null}
-    </MuiDialogTitle>
-  );
-});
+const DialogTitle = withStyles(styles)(
+  ({ children, classes, onClose, ...other }) => {
+    return (
+      <MuiDialogTitle disableTypography className={classes.root} {...other}>
+        <Typography variant="h6">{children}</Typography>
+        {onClose ? (
+          <IconButton
+            aria-label="close"
+            className={classes.closeButton}
+            onClick={onClose}
+          >
+            <CloseIcon />
+          </IconButton>
+        ) : null}
+      </MuiDialogTitle>
+    );
+  }
+);
 
 const DialogContent = withStyles((theme) => ({
   root: {
@@ -56,13 +60,13 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
-function OpenDialog({ children, pristine, submitting }) {
+function OpenDialog({ children, back }) {
   const router = useRouter();
 
   const [open, setOpen] = React.useState(true);
 
   const handleClose = () => {
-    router.push("/apt1/nojs");
+    router.push(back);
     setOpen(false);
   };
 
@@ -81,5 +85,9 @@ function OpenDialog({ children, pristine, submitting }) {
     </div>
   );
 }
+
+OpenDialog.propTypes = {
+  back: Proptypes.string,
+};
 
 export default OpenDialog;
