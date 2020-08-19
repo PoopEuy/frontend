@@ -12,10 +12,17 @@ function handleClick(event) {
 
 export default function SimpleBreadcrumbs() {
   const router = useRouter();
+  const texts = router.pathname.split("/");
+
   return (
     <Breadcrumbs aria-label="breadcrumb">
-      <Typography color="textPrimary">Breadcrumb</Typography>
-      <Typography color="textPrimary">Breadcrumb</Typography>
+      {texts.map((text, index) => {
+        return (
+          <Typography key={index} color="textPrimary">
+            {text.toLocaleUpperCase()}
+          </Typography>
+        );
+      })}
     </Breadcrumbs>
   );
 }

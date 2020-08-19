@@ -9,4 +9,11 @@ const Apt1Nojs = ({ DataApt1Nojs }) => {
   return <TableNojs dataNojs={dataApt1Nojs} titleTable="APT1 NOJS" />;
 };
 
+export async function getServerSideProps() {
+  await new Promise((resolve) => {
+    setTimeout(resolve, 100);
+  });
+  return { props: {} };
+}
+
 export default connect((state) => state, null)(Apt1Nojs);

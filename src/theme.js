@@ -53,7 +53,7 @@ const coreThemeObj = {
 };
 
 export const themeConfig = (darkState) => {
-  const mainPrimaryColor = darkState ? orange[500] : lightBlue[500];
+  const mainPrimaryColor = darkState ? lightBlue[800] : lightBlue[500];
   const mainSecondaryColor = darkState ? lightBlue[900] : orange[500];
   const palletType = darkState ? "dark" : "light";
 

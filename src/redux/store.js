@@ -1,7 +1,6 @@
 import { createStore, applyMiddleware, combineReducers } from "redux";
 import { HYDRATE, createWrapper } from "next-redux-wrapper";
 import thunkMiddleware from "redux-thunk";
-import { reducer as reduxFormReducer } from "redux-form";
 import DataTable from "@redux/dataTable/reducer";
 import DataApt1Nojs from "@redux/apt1/nojs/reducer";
 
@@ -16,7 +15,6 @@ const bindMiddleware = (middleware) => {
 const combinedReducer = combineReducers({
   DataTable,
   DataApt1Nojs,
-  form: reduxFormReducer, // mounted under "form"
 });
 
 const reducer = (state, action) => {
