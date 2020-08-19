@@ -1,184 +1,179 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useForm, Controller } from "react-hook-form";
+import {
+  TextField,
+  Checkbox,
+  Select,
+  MenuItem,
+  Button,
+  InputLabel,
+  DialogActions,
+  FormHelperText,
+  FormControl,
+} from "@material-ui/core";
 
-//material ui core
-import TextField from "@material-ui/core/TextField";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import { makeStyles } from "@material-ui/core/styles";
-import { Button, DialogActions } from "@material-ui/core";
 
-import asyncValidate from "./asyncValidate";
-import { connect } from "react-redux";
-import { Field, reduxForm } from "redux-form";
-
-const validate = (values) => {
-  const errors = {};
-  const requiredFields = ["nojs", "site", "provinsi", "lc", "mitra", "ip"];
-  requiredFields.forEach((field) => {
-    if (!values[field]) {
-      errors[field] = "Required";
-    }
-  });
-  if (
-    values.email &&
-    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
-  ) {
-    errors.email = "Invalid email address";
-  }
-  return errors;
-};
-
-const renderTextField = ({
-  label,
-  input,
-  meta: { touched, invalid, error },
-  ...custom
-}) => (
-  <TextField
-    label={label}
-    fullWidth={true}
-    placeholder={label}
-    error={touched && invalid}
-    helperText={touched && error}
-    {...input}
-    {...custom}
-  />
-);
-
-const renderCheckbox = ({ input, label }) => (
-  <div>
-    <FormControlLabel
-      control={
-        <Checkbox
-          checked={input.value ? true : false}
-          onChange={input.onChange}
-        />
-      }
-      label={label}
-    />
-  </div>
-);
-
-const renderFromHelper = ({ touched, error }) => {
-  if (!(touched && error)) {
-    return;
-  } else {
-    return <FormHelperText>{touched && error}</FormHelperText>;
-  }
-};
-
-const renderSelectField = ({
-  input,
-  label,
-  meta: { touched, error },
-  children,
-  ...custom
-}) => (
-  <FormControl fullWidth={true} error={touched && error}>
-    <InputLabel htmlFor="formselect">{label}</InputLabel>
-    <Select
-      native
-      {...input}
-      {...custom}
-      inputProps={{
-        name: "form",
-        id: "formselect",
-      }}
-    >
-      {children}
-    </Select>
-    {renderFromHelper({ touched, error })}
-  </FormControl>
-);
-
-const useStyles = makeStyles({
-  spasi: {
-    marginBottom: 12,
+const useStyles = makeStyles((theme) => ({
+  root: {
+    "& > *": {
+      margin: theme.spacing(1),
+      marginBottom: theme.spacing(2),
+    },
   },
-});
+}));
 
-function MaterialUiForm(props) {
-  const { handleSubmit, pristine, submitting } = props;
+const defaultValues = {
+  nojs: "",
+  site: "",
+  provinsi: "",
+  lc: "",
+  mitra: "",
+  ip: "",
+  latitude: "",
+  longitude: "",
+  id_lvdvsat: "",
+  id_ping: "",
+  id_batvolt: "",
+  id_vsatcurr: "",
+  id_btscurr: "",
+};
+
+const CostumeField = ({ name, required, control, errors }) => {
+  return (
+    <section>
+      <Controller
+        as={TextField}
+        name={name}
+        id={name}
+        control={control}
+        variant="filled"
+        fullWidth
+        label={required ? `${name.toUpperCase()} *` : name.toUpperCase()}
+        error={errors[name] ? true : false}
+        helperText={errors[name] ? errors[name]["message"] : ""}
+        rules={
+          required && {
+            required: "This is required",
+          }
+        }
+      />
+    </section>
+  );
+};
+
+const CostumeSelect = ({ name, values, control, errors, required }) => {
+  return (
+    <section>
+      <FormControl variant="filled" fullWidth>
+        <InputLabel>
+          {required ? `${name.toUpperCase()} *` : name.toUpperCase()}
+        </InputLabel>
+        <Controller
+          name={name}
+          control={control}
+          rules={
+            required && {
+              required: "This is required",
+            }
+          }
+          as={
+            <Select error={errors[name] ? true : false}>
+              {values.map((value, i) => {
+                return (
+                  <MenuItem key={i} value={value}>
+                    {value}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          }
+        />
+        {errors[name] && (
+          <FormHelperText>{errors[name]["message"]}</FormHelperText>
+        )}
+      </FormControl>
+    </section>
+  );
+};
+
+const FormNojs = ({ value, submit, loading }) => {
+  const classes = useStyles();
+  const { handleSubmit, control, errors } = useForm({
+    defaultValues: value ? value : defaultValues,
+    criteriaMode: "all",
+  });
+
+  const lc = ["TELKOM", "IFORTE", "PSN", "IPT"];
+  const mitra = ["Valtel", "Ecom", "Abbasy", "Fastech", "Lindu"];
+
+  const textField1 = [
+    { name: "nojs", required: true },
+    { name: "site", required: true },
+    { name: "provinsi", required: false },
+  ];
+
+  const textField2 = [
+    { name: "ip", required: true },
+    { name: "latitude", required: false },
+    { name: "longitude", required: false },
+    { name: "id_lvdvsat", required: false },
+    { name: "id_ping", required: false },
+    { name: "id_batvolt", required: false },
+    { name: "id_vsatcurr", required: false },
+    { name: "id_btscurr", required: false },
+  ];
+  const textSelect = [
+    { name: "lc", data: lc, required: true },
+    { name: "mitra", data: mitra, required: true },
+  ];
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Field name="nojs" component={renderTextField} label="NOJS" />
-      <Field name="site" component={renderTextField} label="SITE" />
-      <Field name="provinsi" component={renderTextField} label="PROVINSI" />
+    <form className={classes.root} onSubmit={handleSubmit(submit)}>
+      {textField1.map((field) => {
+        return (
+          <CostumeField
+            key={field.name}
+            name={field.name}
+            control={control}
+            errors={errors}
+            required={field.required}
+          />
+        );
+      })}
 
-      <Field name="lc" label="LC" component={renderSelectField}>
-        <option value="" />
-        <option value={"TELKOM"}>TELKOM</option>
-        <option value={"IFORTE"}>IFORTE</option>
-        <option value={"PSN"}>PSN</option>
-        <option value={"IPT"}>IPT</option>
-      </Field>
+      {textSelect.map((field) => {
+        return (
+          <CostumeSelect
+            key={field.name}
+            name={field.name}
+            values={field.data}
+            control={control}
+            errors={errors}
+            required={field.required}
+          />
+        );
+      })}
 
-      <Field name="mitra" component={renderSelectField} label="MITRA">
-        <option value="" />
-        <option value={"Valtel"}>Valtel</option>
-        <option value={"Ecom"}>Ecom</option>
-        <option value={"Abbasy"}>Abbasy</option>
-        <option value={"Fastech"}>Fastech</option>
-        <option value={"Lindu"}>Lindu</option>
-      </Field>
-
-      <Field name="ip" component={renderTextField} label="IP" />
-      <Field name="latitude" component={renderTextField} label="Latitude" />
-      <Field name="longitude" component={renderTextField} label="Longitude" />
-      <Field name="id_lvdvsat" component={renderTextField} label="Id_lvdvsat" />
-      <Field name="id_ping" component={renderTextField} label="Id_ping" />
-      <Field
-        name="id_vsatcurr"
-        component={renderTextField}
-        label="Id_vsatcurr"
-      />
-
-      <Field name="id_btscurr" component={renderTextField} label="Id_btscurr" />
+      {textField2.map((field) => {
+        return (
+          <CostumeField
+            key={field.name}
+            name={field.name}
+            control={control}
+            errors={errors}
+            required={field.required}
+          />
+        );
+      })}
 
       <DialogActions>
-        <Button
-          type="submit"
-          disabled={pristine || submitting}
-          variant="contained"
-          color="primary"
-        >
+        <Button type="submit" fullWidth variant="contained" color="secondary">
           Save changes
         </Button>
       </DialogActions>
     </form>
   );
-}
-
-const mapStateToProps = ({ DataApt1Nojs }) => {
-  const data = DataApt1Nojs.dataApt1NojsDetail;
-  return {
-    initialValues: {
-      nojs: data.nojs,
-      site: data.site,
-      provinsi: data.provinsi,
-      lc: data.lc,
-      mitra: data.mitra,
-      ip: data.ip,
-      langitude: data.langitude,
-      id_lvdvsat: data.id_lvdvsat,
-      id_ping: data.id_ping,
-      id_batvolt: data.id_batvolt,
-      id_vsatcurr: data.id_vsatcurr,
-      id_btscurr: data.id_btscurr,
-    },
-  };
 };
 
-MaterialUiForm = reduxForm({
-  form: "MaterialUiForm",
-  validate,
-  asyncValidate,
-  enableReinitialize: true,
-})(MaterialUiForm);
-
-export default connect(mapStateToProps, null)(MaterialUiForm);
+export default FormNojs;
