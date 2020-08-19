@@ -1,23 +1,73 @@
 import { createMuiTheme } from "@material-ui/core/styles";
-import { red } from "@material-ui/core/colors";
-
+import {
+  orange,
+  lightBlue,
+  deepPurple,
+  deepOrange,
+  red,
+} from "@material-ui/core/colors";
 // Create a theme instance.
-const theme = createMuiTheme({
+export const theme = createMuiTheme({
   palette: {
     primary: {
-      main: "#23C9FF",
+      main: "#556cd6",
     },
     secondary: {
-      main: "#7CC6FE",
+      main: "#556cd6",
     },
     error: {
       main: red.A400,
     },
     background: {
       default: "#fff",
-      // default: "#CCD5FF",
     },
   },
 });
 
-export default theme;
+const coreThemeObj = {
+  typography: {
+    fontFamily: [
+      "-apple-system",
+      "BlinkMacSystemFont",
+      '"Segoe UI"',
+      "Roboto",
+      '"Helvetica Neue"',
+      "Arial",
+      "sans-serif",
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(","),
+    palette: {
+      error: {
+        main: red.A400,
+      },
+      primary: {
+        main: lightBlue[500],
+      },
+      background: {
+        default: "#fff",
+      },
+    },
+  },
+};
+
+export const themeConfig = (darkState) => {
+  const mainPrimaryColor = darkState ? orange[500] : lightBlue[500];
+  const mainSecondaryColor = darkState ? lightBlue[900] : orange[500];
+  const palletType = darkState ? "dark" : "light";
+
+  return createMuiTheme({
+    ...coreThemeObj,
+    palette: {
+      ...coreThemeObj.palette,
+      type: palletType,
+      primary: {
+        main: mainPrimaryColor,
+      },
+      secondary: {
+        main: mainSecondaryColor,
+      },
+    },
+  });
+};
