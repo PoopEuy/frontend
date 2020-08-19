@@ -4,7 +4,6 @@ import MUIDataTable from "mui-datatables";
 
 //material ui core
 import { Container } from "@material-ui/core";
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core";
 
 //redux
 import { connect } from "react-redux";
@@ -36,11 +35,6 @@ const TableComponent = ({ DataTable, customToolbar }) => {
     },
   };
 
-  const theme = createMuiTheme({
-    palette: { type: "dark" },
-    typography: { useNextVariants: true },
-  });
-
   options = {
     ...options,
     customToolbar: customToolbar,
@@ -48,14 +42,12 @@ const TableComponent = ({ DataTable, customToolbar }) => {
   return (
     <Container>
       {dataTable ? (
-        <MuiThemeProvider theme={theme}>
-          <MUIDataTable
-            title={title}
-            data={dataTable.data}
-            columns={dataTable.columns}
-            options={options}
-          />
-        </MuiThemeProvider>
+        <MUIDataTable
+          title={title}
+          data={dataTable.data}
+          columns={dataTable.columns}
+          options={options}
+        />
       ) : (
         <h1> {errorApt1Nojs} </h1>
       )}

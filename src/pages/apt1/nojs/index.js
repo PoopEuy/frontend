@@ -6,9 +6,7 @@ const Apt1Nojs = ({ DataApt1Nojs }) => {
   const href = "/apt1/nojs/edit/[nojs]";
   const as = "/apt1/nojs/edit/";
 
-  return (
-    <TableNojs dataNojs={dataApt1Nojs} href={href} as={as} title="APT1 NOJS" />
-  );
+  return <TableNojs dataNojs={dataApt1Nojs} titleTable="APT1 NOJS" />;
 };
 
 export default connect((state) => state, null)(Apt1Nojs);

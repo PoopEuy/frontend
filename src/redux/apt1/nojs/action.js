@@ -90,3 +90,32 @@ export const editApt1Nojs = (nojs, data) => (dispatch) => {
       });
     });
 };
+
+export const addApt1Nojs = (data) => (dispatch) => {
+  console.log("action add");
+  const access_token =
+    "860Y2paeQbjXa0hQo2sV2JVwftxAKZLpDGZUxEpFTk9kvcyYYTvQSMo1R4yL4qN2GV4DJ6K5WjgrSmAP";
+  Axios.post("http://127.0.0.1:8000/api/nojs/", data, {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  })
+    .then((res) => {
+      console.log(res);
+      dispatch({
+        type: apt1NojsType.APT1_NOJS_EDIT,
+        payload: {
+          data: true,
+        },
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      dispatch({
+        type: apt1NojsType.APT1_NOJS_EDIT,
+        payload: {
+          data: false,
+        },
+      });
+    });
+};

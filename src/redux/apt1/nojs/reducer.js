@@ -11,7 +11,6 @@ export default function reducer(state = nojsInitialState, action) {
   switch (action.type) {
     case apt1NojsType.APT1_NOJS:
       return Object.assign({}, state, {
-        ...state,
         dataApt1Nojs: action.payload.data,
         errorApt1Nojs: action.payload.error,
       });

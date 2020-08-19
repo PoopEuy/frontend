@@ -23,7 +23,7 @@ const styles = (theme) => ({
     position: "absolute",
     right: theme.spacing(1),
     top: theme.spacing(1),
-    color: theme.palette.grey[900],
+    color: theme.palette.secondary.main,
   },
 });
 
@@ -48,7 +48,7 @@ const DialogTitle = withStyles(styles)(
 
 const DialogContent = withStyles((theme) => ({
   root: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
     width: theme.spacing(39),
   },
 }))(MuiDialogContent);
@@ -60,34 +60,28 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
-function OpenDialog({ children, back }) {
+function OpenDialog({ children, openDialog, setOpenDialog, title }) {
   const router = useRouter();
-
-  const [open, setOpen] = React.useState(true);
+  // const [open, setOpen] = React.useState(true);
 
   const handleClose = () => {
-    router.push(back);
-    setOpen(false);
+    setOpenDialog(false);
   };
 
   return (
     <div>
       <Dialog
-        onClose={handleClose}
+        // onClose={handleClose}
         aria-labelledby="customized-dialog-title"
-        open={open}
+        open={openDialog}
       >
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          Modal title
+          {title}
         </DialogTitle>
         <DialogContent dividers>{children}</DialogContent>
       </Dialog>
     </div>
   );
 }
-
-OpenDialog.propTypes = {
-  back: Proptypes.string,
-};
 
 export default OpenDialog;
