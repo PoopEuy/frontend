@@ -18,9 +18,8 @@ import Toolbar from "@material-ui/core/Toolbar";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
-import Badge from "@material-ui/core/Badge";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 //material ui icons
 import MenuIcon from "@material-ui/icons/Menu";
@@ -28,6 +27,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import Brightness7Icon from "@material-ui/icons/Brightness7";
 import Brightness4Icon from "@material-ui/icons/Brightness4";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
 //import images
 import Sundaya from "public/images/sundaya.png";
@@ -39,7 +39,10 @@ import {
   readDarkModeLocalStorage,
   setDarkModeLocalStorage,
 } from "src/configThemeMode";
-import { lightTheme, darkTheme, themeConfig } from "src/theme";
+import { themeConfig } from "src/theme";
+import Clock from "@components/Clock";
+import TooltipComponent from "@components/TooltipComponent";
+import { Tooltip } from "@material-ui/core";
 
 const drawerWidth = 240;
 
@@ -110,14 +113,18 @@ const useStyles = makeStyles((theme) => ({
     margin: `${theme.spacing(1)}px auto`,
     padding: theme.spacing(2),
   },
+  title: {
+    flexGrow: 1,
+  },
 }));
 
-const DrawerHeader = ({ listPage, mainPage }) => {
+const DrawerHeader = ({ listPage, mainPage, window }) => {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = useState(true);
   const [darkState, setDarkState] = useState(false);
-
+  const matches = useMediaQuery("(min-width:500px)");
+  console.log(matches);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -156,10 +163,19 @@ const DrawerHeader = ({ listPage, mainPage }) => {
             >
               <MenuIcon />
             </IconButton>
-            <BreadcrumbsComponen />
-            <IconButton onClick={handleThemeChange}>
+            <span className={classes.title}>
+              <BreadcrumbsComponen />
+            </span>
+            <TooltipComponent
+              title={`Toggle ${darkState ? "Light" : "Dark"} Theme`}
+              onClick={handleThemeChange}
+            >
               {darkState ? <Brightness7Icon /> : <Brightness4Icon />}
-            </IconButton>
+            </TooltipComponent>
+            <TooltipComponent title="Logout">
+              <ExitToAppIcon />
+            </TooltipComponent>
+            {matches && <Clock />}
           </Toolbar>
         </AppBar>
         <Drawer

@@ -3,6 +3,7 @@ import { HYDRATE, createWrapper } from "next-redux-wrapper";
 import thunkMiddleware from "redux-thunk";
 import DataTable from "@redux/dataTable/reducer";
 import DataApt1Nojs from "@redux/apt1/nojs/reducer";
+import Clock from "@redux/clock/reducer";
 
 const bindMiddleware = (middleware) => {
   if (process.env.NODE_ENV !== "production") {
@@ -15,6 +16,7 @@ const bindMiddleware = (middleware) => {
 const combinedReducer = combineReducers({
   DataTable,
   DataApt1Nojs,
+  Clock,
 });
 
 const reducer = (state, action) => {
