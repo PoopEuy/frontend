@@ -11,7 +11,7 @@ import { connect } from "react-redux";
 
 //components OR parts local
 import { getApt1Nojs } from "@redux/apt1/nojs/action";
-import DrawerHeader from "@components/DrawerHeader";
+import DrawerHeader from "@parts/DrawerHeader";
 import Apt1 from "@components/ListPages/apt1";
 
 const useStyle = makeStyles({

@@ -8,9 +8,7 @@ import { Container } from "@material-ui/core";
 //redux
 import { connect } from "react-redux";
 
-const TableComponent = ({ DataTable, customToolbar }) => {
-  const { dataTable, errorApt1Nojs, title } = DataTable;
-
+const TableComponent = ({ dataTable, title, customToolbar }) => {
   let options = {
     filter: false,
     sort: true,
@@ -49,7 +47,7 @@ const TableComponent = ({ DataTable, customToolbar }) => {
           options={options}
         />
       ) : (
-        <h1> {errorApt1Nojs} </h1>
+        <h1> Error </h1>
       )}
     </Container>
   );
@@ -59,4 +57,11 @@ TableComponent.propTypes = {
   customToolbar: PropTypes.func,
 };
 
-export default connect((state) => state)(TableComponent);
+const mapStateToProps = (state) => {
+  return {
+    dataTable: state.DataTable.dataTable,
+    title: state.DataTable.title,
+  };
+};
+
+export default connect(mapStateToProps, null)(TableComponent);

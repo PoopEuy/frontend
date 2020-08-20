@@ -1,12 +1,14 @@
 import { connect } from "react-redux"; //redux
 import TableNojs from "@parts/TableNojs"; // components OR parts local
 
-const Apt1Nojs = ({ DataApt1Nojs }) => {
-  const { dataApt1Nojs } = DataApt1Nojs;
-  const href = "/apt1/nojs/edit/[nojs]";
-  const as = "/apt1/nojs/edit/";
-
+const Apt1Nojs = ({ dataApt1Nojs }) => {
   return <TableNojs dataNojs={dataApt1Nojs} titleTable="APT1 NOJS" />;
 };
 
-export default connect((state) => state, null)(Apt1Nojs);
+const mapStateToProps = (state) => {
+  return {
+    dataApt1Nojs: state.DataApt1Nojs.dataApt1Nojs,
+  };
+};
+
+export default connect(mapStateToProps, null)(Apt1Nojs);
