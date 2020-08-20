@@ -26,7 +26,7 @@ const MyApp = (props) => {
   }, []);
 
   return (
-    <React.Fragment>
+    <>
       <Head>
         <title>SIA</title>
         <meta
@@ -42,7 +42,7 @@ const MyApp = (props) => {
           <Component {...pageProps} />
         </Layout>
       </ThemeProvider>
-    </React.Fragment>
+    </>
   );
 };
 
