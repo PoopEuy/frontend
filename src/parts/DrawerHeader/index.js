@@ -124,7 +124,6 @@ const DrawerHeader = ({ listPage, mainPage, window }) => {
   const [open, setOpen] = useState(true);
   const [darkState, setDarkState] = useState(false);
   const matches = useMediaQuery("(min-width:500px)");
-  console.log(matches);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
