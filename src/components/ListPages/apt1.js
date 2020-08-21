@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import clsx from "clsx";
 
 //material ui core
 import { makeStyles } from "@material-ui/core/styles";
@@ -20,6 +22,7 @@ import ContactsIcon from "@material-ui/icons/Contacts";
 import DetailsIcon from "@material-ui/icons/Details";
 import PermContactCalendarIcon from "@material-ui/icons/PermContactCalendar";
 import SettingsApplicationsIcon from "@material-ui/icons/SettingsApplications";
+import LensSharpIcon from "@material-ui/icons/LensSharp";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,20 +40,27 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 7,
     width: "96%",
   },
+  actived: {
+    textDecorationLine: "underline",
+    // color: "red",
+    pointerEvents: "none",
+    opacity: 0.65,
+  },
 }));
 
 const Apt1 = () => {
   const classes = useStyles();
+  const router = useRouter().pathname;
+  const apt1 = {
+    noc: "/apt1/noc",
+    nojsuser: "/apt1/nojs",
+  };
 
   const [state, setState] = useState({
     apt1: false,
     apt1Nojs: false,
     apt1SlaPrtg: false,
   });
-
-  const [apt1, setApt1] = useState(false);
-  const [apt1Nojs, setApt1Nojs] = useState(false);
-  const [apt1SlaPrtg, setApt1SlaPrtg] = useState(false);
 
   const handleClickApt1 = () => {
     setState({
@@ -97,18 +107,23 @@ const Apt1 = () => {
       </ListItem>
 
       <Collapse in={state.apt1} timeout="auto" unmountOnExit>
-        <Link href="/noc">
-          <List component="div" disablePadding>
-            <ListItem button className={classes.nested}>
+        <List component="div" disablePadding dense={true}>
+          <Link href={apt1.noc}>
+            <ListItem
+              button
+              className={clsx(classes.nested, {
+                [classes.actived]: router == apt1.noc,
+              })}
+            >
               <ListItemIcon>
                 <EqualizerIcons />
               </ListItemIcon>
               <ListItemText primary="NOC" />
             </ListItem>
-          </List>
-        </Link>
+          </Link>
+        </List>
 
-        <List component="div" disablePadding>
+        <List component="div" disablePadding dense={true}>
           <ListItem
             button
             className={classes.nested}
@@ -122,18 +137,23 @@ const Apt1 = () => {
           </ListItem>
 
           <Collapse in={state.apt1Nojs} timeout="auto" unmountOnExit>
-            <Link href="/apt1/nojs">
-              <List component="div" disablePadding>
-                <ListItem button className={classes.child}>
+            <List component="div" disablePadding dense={true}>
+              <Link href={apt1.nojsuser}>
+                <ListItem
+                  button
+                  className={clsx(classes.child, {
+                    [classes.actived]: router == apt1.nojsuser,
+                  })}
+                >
                   <ListItemIcon>
-                    <ContactsIcon />
+                    <DetailsIcon />
                   </ListItemIcon>
                   <ListItemText primary="User" />
                 </ListItem>
-              </List>
-            </Link>
+              </Link>
+            </List>
 
-            <List component="div" disablePadding>
+            <List component="div" disablePadding dense={true}>
               <ListItem button className={classes.child}>
                 <ListItemIcon>
                   <DetailsIcon />
@@ -142,7 +162,7 @@ const Apt1 = () => {
               </ListItem>
             </List>
 
-            <List component="div" disablePadding>
+            <List component="div" disablePadding dense={true}>
               <ListItem button className={classes.child}>
                 <ListItemIcon>
                   <DetailsIcon />
@@ -154,7 +174,7 @@ const Apt1 = () => {
           </Collapse>
         </List>
 
-        <List component="div" disablePadding>
+        <List component="div" disablePadding dense={true}>
           <ListItem
             button
             className={classes.nested}
@@ -168,7 +188,7 @@ const Apt1 = () => {
           </ListItem>
 
           <Collapse in={state.apt1SlaPrtg} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
+            <List component="div" disablePadding dense={true}>
               <ListItem button className={classes.child}>
                 <ListItemIcon>
                   <DetailsIcon />
@@ -177,7 +197,7 @@ const Apt1 = () => {
               </ListItem>
             </List>
 
-            <List component="div" disablePadding>
+            <List component="div" disablePadding dense={true}>
               <ListItem button className={classes.child}>
                 <ListItemIcon>
                   <DetailsIcon />
@@ -189,7 +209,7 @@ const Apt1 = () => {
           </Collapse>
         </List>
 
-        <List component="div" disablePadding>
+        <List component="div" disablePadding dense={true}>
           <ListItem button className={classes.nested}>
             <ListItemIcon>
               <SettingsApplicationsIcon />
