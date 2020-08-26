@@ -118,7 +118,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DrawerHeader = ({ listPage, mainPage, window }) => {
+const DrawerHeader = ({ listPage, mainPage }) => {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = useState(true);

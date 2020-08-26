@@ -9,7 +9,8 @@ import Layout from "@parts/Layout";
 import NProgress from "nprogress";
 import Router from "next/router";
 // import "nprogress/nprogress.css";
-
+// NProgress.configure({ parent: "#barr" });
+NProgress.configure({ minimum: 0.1 });
 Router.events.on("routeChangeStart", (url) => NProgress.start());
 Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
@@ -28,7 +29,7 @@ const MyApp = (props) => {
   return (
     <>
       <Head>
-        <title>SIA</title>
+        <title>SUNDAYA</title>
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"

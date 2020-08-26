@@ -10,6 +10,7 @@ import {
   DialogActions,
   FormHelperText,
   FormControl,
+  Box,
 } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -18,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
       margin: theme.spacing(1),
-      marginBottom: theme.spacing(2),
+      // marginBottom: theme.spacing(2),
     },
   },
 }));
@@ -41,7 +42,7 @@ const defaultValues = {
 
 const CostumeField = ({ name, required, control, errors }) => {
   return (
-    <section>
+    <Box p={1} style={{ minWidth: 250 }}>
       <Controller
         as={TextField}
         name={name}
@@ -58,13 +59,13 @@ const CostumeField = ({ name, required, control, errors }) => {
           }
         }
       />
-    </section>
+    </Box>
   );
 };
 
 const CostumeSelect = ({ name, values, control, errors, required }) => {
   return (
-    <section>
+    <Box p={1} style={{ minWidth: 250 }}>
       <FormControl variant="filled" fullWidth>
         <InputLabel>
           {required ? `${name.toUpperCase()} *` : name.toUpperCase()}
@@ -93,7 +94,7 @@ const CostumeSelect = ({ name, values, control, errors, required }) => {
           <FormHelperText>{errors[name]["message"]}</FormHelperText>
         )}
       </FormControl>
-    </section>
+    </Box>
   );
 };
 
@@ -130,42 +131,51 @@ const FormNojs = ({ value, submit, loading }) => {
 
   return (
     <form className={classes.root} onSubmit={handleSubmit(submit)}>
-      {textField1.map((field) => {
-        return (
-          <CostumeField
-            key={field.name}
-            name={field.name}
-            control={control}
-            errors={errors}
-            required={field.required}
-          />
-        );
-      })}
+      <Box
+        display="flex"
+        flexWrap="wrap"
+        p={1}
+        m={1}
+        // bgcolor="red"
+        alignContent="between"
+      >
+        {textField1.map((field) => {
+          return (
+            <CostumeField
+              key={field.name}
+              name={field.name}
+              control={control}
+              errors={errors}
+              required={field.required}
+            />
+          );
+        })}
 
-      {textSelect.map((field) => {
-        return (
-          <CostumeSelect
-            key={field.name}
-            name={field.name}
-            values={field.data}
-            control={control}
-            errors={errors}
-            required={field.required}
-          />
-        );
-      })}
+        {textSelect.map((field) => {
+          return (
+            <CostumeSelect
+              key={field.name}
+              name={field.name}
+              values={field.data}
+              control={control}
+              errors={errors}
+              required={field.required}
+            />
+          );
+        })}
 
-      {textField2.map((field) => {
-        return (
-          <CostumeField
-            key={field.name}
-            name={field.name}
-            control={control}
-            errors={errors}
-            required={field.required}
-          />
-        );
-      })}
+        {textField2.map((field) => {
+          return (
+            <CostumeField
+              key={field.name}
+              name={field.name}
+              control={control}
+              errors={errors}
+              required={field.required}
+            />
+          );
+        })}
+      </Box>
 
       <DialogActions>
         <Button type="submit" fullWidth variant="contained" color="secondary">
