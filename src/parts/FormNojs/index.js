@@ -11,6 +11,7 @@ import {
   FormHelperText,
   FormControl,
   Box,
+  Grid,
 } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -42,7 +43,7 @@ const defaultValues = {
 
 const CostumeField = ({ name, required, control, errors }) => {
   return (
-    <Box p={1} style={{ minWidth: 250 }}>
+    <Grid item sm={6} xs={12}>
       <Controller
         as={TextField}
         name={name}
@@ -59,13 +60,13 @@ const CostumeField = ({ name, required, control, errors }) => {
           }
         }
       />
-    </Box>
+    </Grid>
   );
 };
 
 const CostumeSelect = ({ name, values, control, errors, required }) => {
   return (
-    <Box p={1} style={{ minWidth: 250 }}>
+    <Grid item sm={6} xs={12}>
       <FormControl variant="filled" fullWidth>
         <InputLabel>
           {required ? `${name.toUpperCase()} *` : name.toUpperCase()}
@@ -94,7 +95,7 @@ const CostumeSelect = ({ name, values, control, errors, required }) => {
           <FormHelperText>{errors[name]["message"]}</FormHelperText>
         )}
       </FormControl>
-    </Box>
+    </Grid>
   );
 };
 
@@ -130,15 +131,8 @@ const FormNojs = ({ value, submit, loading }) => {
   ];
 
   return (
-    <form className={classes.root} onSubmit={handleSubmit(submit)}>
-      <Box
-        display="flex"
-        flexWrap="wrap"
-        p={1}
-        m={1}
-        // bgcolor="red"
-        alignContent="between"
-      >
+    <form onSubmit={handleSubmit(submit)}>
+      <Grid container justify="flex-start" spacing={1}>
         {textField1.map((field) => {
           return (
             <CostumeField
@@ -175,7 +169,7 @@ const FormNojs = ({ value, submit, loading }) => {
             />
           );
         })}
-      </Box>
+      </Grid>
 
       <DialogActions>
         <Button type="submit" fullWidth variant="contained" color="secondary">
