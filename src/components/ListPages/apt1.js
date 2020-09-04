@@ -22,7 +22,6 @@ import ContactsIcon from "@material-ui/icons/Contacts";
 import DetailsIcon from "@material-ui/icons/Details";
 import PermContactCalendarIcon from "@material-ui/icons/PermContactCalendar";
 import SettingsApplicationsIcon from "@material-ui/icons/SettingsApplications";
-import LensSharpIcon from "@material-ui/icons/LensSharp";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,9 +40,10 @@ const useStyles = makeStyles((theme) => ({
     width: "96%",
   },
   actived: {
-    textDecorationLine: "underline",
+    // textDecorationLine: "underline",
     // color: "red",
     pointerEvents: "none",
+    borderRight: "8px solid red",
     opacity: 0.65,
   },
 }));
@@ -54,6 +54,7 @@ const Apt1 = () => {
   const apt1 = {
     noc: "/apt1/noc",
     nojsuser: "/apt1/nojs",
+    servicecalls: "/apt1/servicecall",
   };
 
   const [state, setState] = useState({
@@ -210,12 +211,19 @@ const Apt1 = () => {
         </List>
 
         <List component="div" disablePadding dense={true}>
-          <ListItem button className={classes.nested}>
-            <ListItemIcon>
-              <SettingsApplicationsIcon />
-            </ListItemIcon>
-            <ListItemText primary="Service Calls" />
-          </ListItem>
+          <Link href={apt1.servicecalls}>
+            <ListItem
+              button
+              className={clsx(classes.nested, {
+                [classes.actived]: router == apt1.servicecalls,
+              })}
+            >
+              <ListItemIcon>
+                <SettingsApplicationsIcon />
+              </ListItemIcon>
+              <ListItemText primary="Service Calls" />
+            </ListItem>
+          </Link>
         </List>
       </Collapse>
     </Paper>
