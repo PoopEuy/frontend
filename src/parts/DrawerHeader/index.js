@@ -42,7 +42,6 @@ import {
 import { themeConfig } from "src/theme";
 import Clock from "@components/Clock";
 import TooltipComponent from "@components/TooltipComponent";
-import { Tooltip } from "@material-ui/core";
 
 const drawerWidth = 240;
 
