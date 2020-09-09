@@ -29,11 +29,16 @@ const TableNojs = ({
   editApt1Nojs,
   addApt1Nojs,
   dataNojs,
+  errorNojs,
   setTableNojs,
   titleTable,
 }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [titleDialog, setTitleDialog] = useState(false);
+  const [dataTable, setDataTable] = useState({
+    data: false,
+    error: false,
+  });
   const [records, setRecords] = useState(false);
 
   const nullTostring = (data) => {
@@ -100,13 +105,28 @@ const TableNojs = ({
           },
         },
       });
-      return setTableNojs(result, titleTable);
+      setDataTable({
+        data: result,
+        error: false,
+      });
     }
-  }, [dataNojs]);
+    if (errorNojs != false) {
+      setDataTable({
+        data: false,
+        error: true,
+      });
+    }
+  }, [dataNojs, errorNojs]);
 
   return (
     <>
-      <TableComponent customToolbar={customToolbar} />
+      <TableComponent
+        dataTable={dataTable.data}
+        error={dataTable.error}
+        title={titleTable}
+        customToolbar={customToolbar}
+        maxTable={710}
+      />
       <OpenDialog
         openDialog={openDialog}
         setOpenDialog={setOpenDialog}
