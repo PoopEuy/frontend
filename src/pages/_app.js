@@ -6,15 +6,9 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { theme } from "../theme";
 import { wrapper } from "@redux/store";
 import Layout from "@parts/Layout";
-import NProgress from "nprogress";
-import Router from "next/router";
+import ProgresBar from "@components/ProgresBar";
 // import "nprogress/nprogress.css";
 // NProgress.configure({ parent: "#barr" });
-NProgress.configure({ minimum: 0.1 });
-Router.events.on("routeChangeStart", (url) => NProgress.start());
-Router.events.on("routeChangeComplete", () => NProgress.done());
-Router.events.on("routeChangeError", () => NProgress.done());
-
 const MyApp = (props) => {
   const { Component, pageProps } = props;
 
@@ -34,11 +28,11 @@ const MyApp = (props) => {
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
-        <link rel="stylesheet" type="text/css" href="../nprogress.css" />
       </Head>
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
+        <ProgresBar />
         <Layout>
           <Component {...pageProps} />
         </Layout>
