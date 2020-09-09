@@ -44,3 +44,64 @@ export const apt1PostNojs = async (data) => {
 
   return result;
 };
+
+export const apt1GetServiceOpen = async () => {
+  const result = await instanceApt1
+    .get(`/api/servicewithsla`, {
+      params: {
+        status: "OPEN",
+      },
+    })
+    .then((res) => {
+      return {
+        data: res.data,
+        error: false,
+      };
+    })
+    .catch((error) => {
+      return {
+        error: true,
+        message: error.message,
+      };
+    });
+
+  return result;
+};
+
+export const apt1PutServiceOpen = async (service_id, data) => {
+  const result = await instanceApt1
+    .put(`/api/servicecalls/${service_id}`, data)
+    .then((res) => {
+      return {
+        error: false,
+      };
+    })
+    .catch((error) => {
+      return {
+        error: true,
+      };
+    });
+
+  return result;
+};
+
+export const apt1GetServiceChart = async (param) => {
+  const result = await instanceApt1
+    .get(`/api/servicecount`, {
+      params: param,
+    })
+    .then((res) => {
+      return {
+        data: res.data,
+        error: false,
+      };
+    })
+    .catch((error) => {
+      return {
+        error: true,
+        message: error.message,
+      };
+    });
+
+  return result;
+};
