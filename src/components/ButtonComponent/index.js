@@ -30,6 +30,7 @@ export default function ButtonComponent({
   type,
   children,
   fullWidth,
+  size,
 }) {
   const classes = useStyles();
 
@@ -42,6 +43,7 @@ export default function ButtonComponent({
           disabled={loading}
           type={type}
           fullWidth={fullWidth}
+          size={size}
         >
           {children}
         </Button>
@@ -55,4 +57,5 @@ export default function ButtonComponent({
 
 ButtonComponent.propType = {
   loading: PropTypes.bool.isRequired,
+  size: PropTypes.string.isRequired,
 };
