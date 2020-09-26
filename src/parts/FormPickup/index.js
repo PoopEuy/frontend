@@ -19,6 +19,8 @@ import {
 
 import DateFnsUtils from "@date-io/date-fns";
 import ButtonComponent from "@components/ButtonComponent";
+import FormSelectNojs from "@components/FormSelectNojs";
+import Multiple from "@components/FormSelectNojs/multiple";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,6 +40,7 @@ const CostumeDateTime = ({
   onAccept,
   control,
   required,
+  time,
 }) => {
   return (
     <Grid item sm={6} xs={12}>
@@ -50,20 +53,36 @@ const CostumeDateTime = ({
           }
         }
         as={
-          <DatePicker
-            inputVariant="outlined"
-            fullWidth
-            label={name.toUpperCase()}
-            ampm={false}
-            onAccept={onAccept}
-            minDate={min}
-            maxDate={max}
-            showTodayButton
-            format="yyyy-MM-dd"
-            // format="yyyy-MM-dd HH:mm"
-            error={errors[name] ? true : false}
-            helperText={errors[name] && errors[name]["message"]}
-          />
+          time ? (
+            <DateTimePicker
+              inputVariant="outlined"
+              fullWidth
+              label={name.toUpperCase()}
+              ampm={false}
+              onAccept={onAccept}
+              minDate={min}
+              maxDate={max}
+              showTodayButton
+              format="yyyy-MM-dd HH:mm"
+              error={errors[name] ? true : false}
+              helperText={errors[name] && errors[name]["message"]}
+            />
+          ) : (
+            <DatePicker
+              inputVariant="outlined"
+              fullWidth
+              label={name.toUpperCase()}
+              ampm={false}
+              onAccept={onAccept}
+              minDate={min}
+              maxDate={max}
+              showTodayButton
+              format="yyyy-MM-dd"
+              // format="yyyy-MM-dd HH:mm"
+              error={errors[name] ? true : false}
+              helperText={errors[name] && errors[name]["message"]}
+            />
+          )
         }
       />
     </Grid>
@@ -117,14 +136,14 @@ export const FormPickupServiceCall = ({ submit, loading }) => {
   const radio = ["1week", "2week", "1month"];
   const classes = useStyles();
 
-  function handleClick(event) {
+  const handleClick = (event) => {
     setMinMax({
       ...minmax,
       radio: event.target.value,
     });
     setValue("start", null);
     setValue("end", null);
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit(submit)}>
@@ -187,6 +206,70 @@ export const FormPickupServiceCall = ({ submit, loading }) => {
           />
           <Grid item sm={6} xs={12}>
             <ButtonComponent loading={loading} type="submit">
+              START
+            </ButtonComponent>
+          </Grid>
+        </Grid>
+      </Paper>
+    </form>
+  );
+};
+
+export const FormPickupWithNojs = ({ submit, loading }) => {
+  const { handleSubmit, control, errors, setValue } = useForm({
+    defaultValues,
+    criteriaMode: "all",
+  });
+  const classes = useStyles();
+  const [minmax, setMinMax] = useState({
+    max: null,
+    min: null,
+  });
+
+  return (
+    <form onSubmit={handleSubmit(submit)}>
+      {/* <form onSubmit={handleSubmit((data) => console.log(data))}> */}
+      <Paper elevation={4}>
+        <Grid className={classes.root} container justify="center" spacing={3}>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <CostumeDateTime
+              name="start"
+              errors={errors}
+              onAccept={(data) => {
+                setMinMax({
+                  ...minmax,
+                  min: data,
+                  radio: null,
+                });
+                setValue("radioButton", null);
+              }}
+              max={minmax.max}
+              control={control}
+              time={true}
+              required={true}
+            />
+            <CostumeDateTime
+              name="end"
+              errors={errors}
+              onAccept={(data) => {
+                setMinMax({
+                  ...minmax,
+                  max: data,
+                  radio: null,
+                });
+                setValue("radioButton", null);
+              }}
+              min={minmax.min}
+              control={control}
+              time={true}
+              required={true}
+            />
+          </MuiPickersUtilsProvider>
+
+          {/* <FormSelectNojs control={control} errors={errors} /> */}
+          <Multiple control={control} setValue={setValue} errors={errors} />
+          <Grid item sm={6} xs={12}>
+            <ButtonComponent loading={loading} type="submit" size="large">
               START
             </ButtonComponent>
           </Grid>
