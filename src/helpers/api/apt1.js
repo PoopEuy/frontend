@@ -105,3 +105,45 @@ export const apt1GetServiceChart = async (param) => {
 
   return result;
 };
+
+export const apt1GetLogger = async (param) => {
+  const result = await instanceApt1
+    .get(`/api/logger`, {
+      params: param,
+    })
+    .then((res) => {
+      return {
+        data: res.data,
+        error: false,
+      };
+    })
+    .catch((error) => {
+      return {
+        error: true,
+        message: error.message,
+      };
+    });
+
+  return result;
+};
+
+export const apt1GetSla = async (param) => {
+  const result = await instanceApt1
+    .get(`/api/logger/sla`, {
+      params: param,
+    })
+    .then((res) => {
+      return {
+        data: res.data,
+        error: false,
+      };
+    })
+    .catch((error) => {
+      return {
+        error: true,
+        message: error.message,
+      };
+    });
+
+  return result;
+};
