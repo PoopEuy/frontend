@@ -24,12 +24,18 @@ import ChartServiceCalls from "@parts/ServiceCalls/ChartServiceCalls";
 
 import jsonToTable from "@helpers/jsonToTable";
 import { pad } from "@helpers/setZeroDateTime";
+import { Grid, useTheme } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: 25,
     flexGrow: 1,
     padding: 9,
+  },
+  avg: {
+    backgroundColor: theme.palette.primary.main,
+    marginTop: 10,
+    marginRight: 2,
   },
 }));
 
@@ -65,6 +71,7 @@ const TabServiceCall = ({
     error: false,
   });
   const [openDialog, setOpenDialog] = useState(false);
+  const [avgError, setAvgError] = useState(0);
   const [records, setRecords] = useState(false);
   const [loading, setLoading] = useState(false);
   const [chart, setChart] = useState({
@@ -104,6 +111,13 @@ const TabServiceCall = ({
     result.then((res) => {
       if (!res.error) {
         const result = jsonToTable(res.data);
+        let tempError = res.data;
+        tempError = tempError.reduce(
+          (accumulator, currentValue) =>
+            accumulator + parseInt(currentValue.error) / 100,
+          0
+        );
+        setAvgError(`Error ${tempError.toFixed(2)}`);
         result.columns.push({
           name: "edit",
           label: "Edit",
@@ -226,6 +240,15 @@ const TabServiceCall = ({
             title="Service Call"
             maxTable={600}
           />
+          <Box
+            display="flex"
+            flexDirection="row-reverse"
+            bgcolor="background.paper"
+          >
+            <Box p={1} className={classes.avg}>
+              {avgError}
+            </Box>
+          </Box>
         </TabPanel>
         <TabPanel value={valueTab} index={1}>
           <FormPickupServiceCall
