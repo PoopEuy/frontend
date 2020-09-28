@@ -57,6 +57,10 @@ const Apt1 = () => {
     detail: "/apt1/nojs/detail",
     sla: "/apt1/nojs/sla",
     servicecalls: "/apt1/servicecall",
+    prtg: {
+      sla: "/apt1/prtg/sla",
+      state: "/apt1/prtg/state",
+    },
   };
 
   const [state, setState] = useState({
@@ -206,21 +210,35 @@ const Apt1 = () => {
 
           <Collapse in={state.apt1SlaPrtg} timeout="auto" unmountOnExit>
             <List component="div" disablePadding dense={true}>
-              <ListItem button className={classes.child}>
-                <ListItemIcon>
-                  <DetailsIcon />
-                </ListItemIcon>
-                <ListItemText primary="Sla" />
-              </ListItem>
+              <Link href={apt1.prtg.sla}>
+                <ListItem
+                  button
+                  className={clsx(classes.child, {
+                    [classes.actived]: router == apt1.prtg.sla,
+                  })}
+                >
+                  <ListItemIcon>
+                    <DetailsIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Sla" />
+                </ListItem>
+              </Link>
             </List>
 
             <List component="div" disablePadding dense={true}>
-              <ListItem button className={classes.child}>
-                <ListItemIcon>
-                  <DetailsIcon />
-                </ListItemIcon>
-                <ListItemText primary="State" />
-              </ListItem>
+              <Link href={apt1.prtg.state}>
+                <ListItem
+                  button
+                  className={clsx(classes.child, {
+                    [classes.actived]: router == apt1.prtg.state,
+                  })}
+                >
+                  <ListItemIcon>
+                    <DetailsIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="State" />
+                </ListItem>
+              </Link>
             </List>
             <Divider />
           </Collapse>
