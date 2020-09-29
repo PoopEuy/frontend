@@ -168,3 +168,24 @@ export const apt1PrtgSla = async (param) => {
 
   return result;
 };
+
+export const apt1PrtgState = async (param) => {
+  const result = await instanceApt1
+    .get(`/api/prtg/state`, {
+      params: param,
+    })
+    .then((res) => {
+      return {
+        data: res.data,
+        error: false,
+      };
+    })
+    .catch((error) => {
+      return {
+        error: true,
+        message: error.message,
+      };
+    });
+
+  return result;
+};
