@@ -115,9 +115,12 @@ const useStyles = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
   },
+  noc: {
+    minHeight: 30,
+  },
 }));
 
-const DrawerHeader = ({ listPage, mainPage }) => {
+const DrawerHeader = ({ listPage, mainPage, noc }) => {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = useState(true);
@@ -209,7 +212,12 @@ const DrawerHeader = ({ listPage, mainPage }) => {
             [classes.contentShift]: open,
           })}
         >
-          <div className={classes.drawerHeader} />
+          <div
+            // className={classes.drawerHeader}
+            className={clsx(classes.drawerHeader, {
+              [classes.noc]: noc,
+            })}
+          />
           {mainPage}
         </main>
       </div>
@@ -226,5 +234,6 @@ DrawerHeader.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,
   ]),
+  noc: PropTypes.bool,
 };
 export default DrawerHeader;
