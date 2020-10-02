@@ -13,6 +13,7 @@ import { connect } from "react-redux";
 import { getApt1Nojs } from "@redux/apt1/nojs/action";
 import DrawerHeader from "@parts/DrawerHeader";
 import Apt1 from "@components/ListPages/apt1";
+import { useRouter } from "next/router";
 
 const useStyle = makeStyles({
   content: {
@@ -29,6 +30,8 @@ const listPages = () => {
 };
 
 const Layout = ({ children, getApt1Nojs }) => {
+  const router = useRouter().pathname;
+
   useEffect(() => {
     getApt1Nojs();
   }, []);
@@ -38,7 +41,11 @@ const Layout = ({ children, getApt1Nojs }) => {
 
   return (
     <>
-      <DrawerHeader listPage={page} mainPage={children} />
+      <DrawerHeader
+        listPage={page}
+        mainPage={children}
+        noc={router === "/apt1/noc" ? true : false}
+      />
     </>
   );
 };
