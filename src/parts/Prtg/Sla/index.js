@@ -40,7 +40,6 @@ const PrtgSla = ({ getSla }) => {
     });
 
     setLoading(true);
-    ("2020-09-27-00-00");
     const start = `${data.start.getFullYear()}-${pad(
       data.start.getMonth() + 1
     )}-${pad(data.start.getDate())}-${pad(data.start.getHours())}-${pad(
@@ -53,14 +52,14 @@ const PrtgSla = ({ getSla }) => {
     )}`;
 
     js.forEach((e) => {
-      let a = getSla({
+      let temp = getSla({
         ...e,
         sdate: start,
         edate: end,
       });
       status++;
 
-      a.then((res) => {
+      temp.then((res) => {
         const data = jsonToTable(res);
         tempColumns = data.columns;
         tempData = tempData.concat(data.data);
