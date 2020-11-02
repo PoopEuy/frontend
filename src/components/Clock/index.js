@@ -12,7 +12,7 @@ const Index = ({ startClock, clock }) => {
     };
   }, [clock]);
 
-  return <div>{format(new Date(clock))}</div>;
+  return (clock ? <div>{format(new Date(clock))}</div>:<div style={{minWidth: 100, height:18, borderRadius: 4}}></div>);
 };
 
 const mapDispatchToProps = (dispatch) => {
