@@ -75,7 +75,8 @@ const useStyles = makeStyles((theme) => ({
   },
   drawerPaper: {
     width: drawerWidth,
-    marginTop: 1.5,
+    // marginTop: 1.5,
+    zIndex: 5,
     backgroundColor: theme.palette.secondary.main,
   },
   drawerHeader: {
@@ -148,7 +149,7 @@ const DrawerHeader = ({ listPage, mainPage, noc }) => {
       <div className={classes.root}>
         <CssBaseline />
         <AppBar
-          style={{ marginTop: 1.5 }}
+          style={{ zIndex: 111 }}
           position="fixed"
           className={clsx(classes.appBar, {
             [classes.appBarShift]: open,
@@ -180,7 +181,7 @@ const DrawerHeader = ({ listPage, mainPage, noc }) => {
           </Toolbar>
         </AppBar>
         <Drawer
-          style={{ marginTop: 1.5 }}
+          style={{ zIndex: 1 }}
           className={classes.drawer}
           variant="persistent"
           anchor="left"
