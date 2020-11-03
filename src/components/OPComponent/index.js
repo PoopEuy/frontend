@@ -11,18 +11,18 @@ import { Tooltip } from "@material-ui/core";
 
 const useStyle = makeStyles((theme) => ({
   chartBox: {
-    width: 350,
+    width: 400,
     margin: 10,
     paddingTop: 10,
     paddingBottom: 10,
   },
   chartHarvest: {
     marginRight: 10,
-    height: 60,
+    height: 85,
   },
   chartEnjoy: {
     marginRight: 10,
-    height: 60,
+    height: 85,
   },
   textStyle: {
     fontSize: 16,
@@ -113,10 +113,6 @@ const OPComponent = ({ data }) => {
   useEffect(() => {
     if (data) {
       setdataOP(data);
-      //   setState({
-      //     pms: data.data.pms.find((e) => e != null) || 0,
-      //     bv: data.data.bv.find((e) => e != null) || 0,
-      //   });
     }
     console.log(`Build data ${data.project_name}`, data);
   }, [data]);
