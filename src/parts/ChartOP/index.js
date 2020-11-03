@@ -95,7 +95,6 @@ const ChartOP = ({ getApi }) => {
     return new Promise((resolve, reject) => {
       getApi()
         .then((res) => {
-          console.log("getPName ", res);
           resolve(res.data);
         })
         .catch((err) => {
