@@ -8,6 +8,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { useRouter } from "next/router";
 import Infinity from "../../../public/images/Infinity-loading.svg";
 import * as op_service from "@helpers/api/outproject";
+import { FullscreenExit } from "@material-ui/icons";
 
 let tempOP = [];
 let status = 0;
@@ -28,79 +29,181 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     textAlign: "center",
   },
+  loading_container: {
+    flexWrap: "wrap",
+    display: "flex",
+    justifyContent: "flex-start",
+  },
+  loading_item: {
+    width: 400,
+    margin: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: "#eaeaea",
+  },
+  loading_item_title: {
+    width: 100,
+    height: 23,
+    marginLeft: 10,
+    backgroundColor: "#c1c1c1",
+  },
+  loading_item_bar: {
+    margin: 10,
+    height: 85,
+    backgroundColor: "#c1c1c1",
+  },
 }));
 
 const ChartOP = ({ getApi }) => {
   const router = useRouter();
   const classes = useStyles();
-  const [loading, setLoading] = useState({ load: false, data: false });
-  const [dataTest, setDataTest] = useState({ site: [] });
+  const view = 10;
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
+  const [totalRecord, setTotalRecord] = useState(0);
+  const [loading, setLoading] = useState({ load: true, data: false });
+  const [timeInterval, setTimeInterval] = useState();
+  const [intervalData, setIntervalData] = useState();
+  const [totalData, setTotalData] = useState();
+  const [currentData, setCurrentData] = useState();
   const [dataOP, setDataOP] = useState(false);
-  const [liveData, setLiveData] = useState();
+
+  const handleChange = (event, value) => {
+    let tmp_page = parseInt(router.query.page);
+    if (tmp_page != value) {
+      router.push(`/outproject?page=${value}`);
+      setPage(value);
+    }
+  };
 
   useEffect(() => {
-    let time = { date: new Date(), minute: 0, second: 0 };
-    let intrvl = 300000;
-    time.second = 60 - time.date.getSeconds();
-    if (time.date.getMinutes() % 5 == 3) {
-      time.minute = time.second > 0 ? 4 : 5;
-    } else if (time.date.getMinutes() % 5 > 3) {
-      time.minute =
-        time.second > 0
-          ? (time.date.getMinutes() % 5) - 1
-          : time.date.getMinutes() % 5;
+    let pages;
+    console.log("init route", router);
+    if (!router.query.page && !router.asPath.match("page")) {
+      handleChange("", 1);
     } else {
-      time.minute =
-        time.second > 0
-          ? 3 - (time.date.getMinutes() % 5) - 1
-          : time.date.getMinutes() % 5;
+      pages = parseInt(router.query.page);
+      if (router.asPath.match("page")) {
+        pages = parseInt(router.asPath.split("=")[1]);
+      }
     }
-    time.second += 60 * time.minute;
-    console.log("time ", time);
-    loadData().then((value) => {
-      getData(value);
-      setTimeout(() => {
-        console.log("RUNNING");
-        tempOP = [];
-        getData(value, true);
-        setInterval(() => {
-          tempOP = [];
-          getData(value, true);
-        }, intrvl);
-      }, time.second * 1000);
+    initTime().then((init_time) => {
+      setTimeInterval(init_time);
+      loadData().then((value) => {
+        setTotalData(value);
+        setPage(pages);
+      });
     });
   }, []);
 
-  const getData = async (value, live = false) => {
-    value.forEach((project_name, index) => {
-      if (project_name) {
-        op_service.opGetLiveData(project_name).then(async (res) => {
-          dataMapOP(res.data, project_name).then((val) => {
-            tempOP.push(val);
-
-            if (index + 1 == value.length) {
-              if (live) {
-                setDataOP(false);
-              }
-              setDataOP(tempOP);
-              setLoading({ load: true, data: true });
-            }
-          });
-        });
+  useEffect(() => {
+    let total_page;
+    if (totalRecord > 0) {
+      total_page = Math.floor(totalRecord / view);
+      if (total_page < totalRecord / view) {
+        total_page += 1;
       }
-    });
+      setTotalPage(total_page);
+    } else {
+      total_page = 0;
+      setTotalPage(total_page);
+    }
+  }, [totalRecord]);
+
+  useEffect(() => {
+    if (totalData) {
+      let current_data,
+        total_data = totalData;
+      if (total_data.length > view) {
+        current_data = [];
+        for (let i = view * page - view; i < view * page; i++) {
+          if (total_data[i]) {
+            current_data.push(total_data[i]);
+          }
+        }
+      } else {
+        current_data = total_data;
+      }
+      setCurrentData(current_data);
+    }
+  }, [page]);
+
+  useEffect(() => {
+    let intrvl = 300000;
+    // let intrvl = 60000;
+    if (timeInterval && currentData) {
+      getData(currentData);
+      setTimeout(() => {
+        getData(currentData, true);
+        let interval = setInterval(() => {
+          getData(currentData, true);
+        }, intrvl);
+        setIntervalData(interval);
+      }, timeInterval * 1000);
+    }
+  }, [currentData]);
+
+  const getData = async (value, live = false) => {
+    console.log(`getData live: ${live}`, value);
+    tempOP = [];
+    setLoading({ load: true, data: false });
+    if (value) {
+      value.forEach((project_name, index) => {
+        console.log(`index ke ${index}`, project_name);
+        if (project_name) {
+          op_service.opGetLiveData(project_name).then(async (res) => {
+            dataMapOP(res.data, project_name).then((val) => {
+              tempOP.push(val);
+
+              if (index + 1 == value.length) {
+                if (live) {
+                  setDataOP(false);
+                }
+                setDataOP(tempOP);
+                setLoading({ load: false, data: true });
+              }
+            });
+          });
+        }
+      });
+    } else {
+      setLoading({ load: false, data: false });
+    }
   };
 
   const loadData = async () => {
     return new Promise((resolve, reject) => {
       getApi()
         .then((res) => {
+          setTotalRecord(res.data.length);
+          setTotalData(res.data);
           resolve(res.data);
         })
         .catch((err) => {
           console.log("err", err);
           reject();
         });
+    });
+  };
+
+  const initTime = async () => {
+    return new Promise((resolve) => {
+      let time = { date: new Date(), minute: 0, second: 0 };
+      time.second = 60 - time.date.getSeconds();
+      if (time.date.getMinutes() % 5 == 3) {
+        time.minute = time.second > 0 ? 4 : 5;
+      } else if (time.date.getMinutes() % 5 > 3) {
+        time.minute =
+          time.second > 0
+            ? (time.date.getMinutes() % 5) - 1
+            : time.date.getMinutes() % 5;
+      } else {
+        time.minute =
+          time.second > 0
+            ? 3 - (time.date.getMinutes() % 5) - 1
+            : time.date.getMinutes() % 5;
+      }
+      resolve((time.second += 60 * time.minute));
     });
   };
 
@@ -115,22 +218,62 @@ const ChartOP = ({ getApi }) => {
             alignItems="flex-start"
           >
             {dataOP &&
+              !loading.load &&
               loading.data &&
               dataOP.map((val, index) => {
                 return <OPComponent key={index} data={val} />;
               })}
           </Grid>
 
-          {!loading.load && (
-            <div className={classes.loading}>
-              <img src={Infinity} alt="tes" />
+          {!loading.load && !loading.data && (
+            <div className={classes.loading}>Koneksi bermasalah</div>
+          )}
+
+          {loading.load && (
+            <div className={classes.loading_container}>
+              <div className={classes.loading_item}>
+                <div className={classes.loading_item_title}></div>
+                <div className={classes.loading_item_bar}></div>
+                <div className={classes.loading_item_bar}></div>
+              </div>
+              <div className={classes.loading_item}>
+                <div className={classes.loading_item_title}></div>
+                <div className={classes.loading_item_bar}></div>
+                <div className={classes.loading_item_bar}></div>
+              </div>
+              <div className={classes.loading_item}>
+                <div className={classes.loading_item_title}></div>
+                <div className={classes.loading_item_bar}></div>
+                <div className={classes.loading_item_bar}></div>
+              </div>
+              <div className={classes.loading_item}>
+                <div className={classes.loading_item_title}></div>
+                <div className={classes.loading_item_bar}></div>
+                <div className={classes.loading_item_bar}></div>
+              </div>
+              <div className={classes.loading_item}>
+                <div className={classes.loading_item_title}></div>
+                <div className={classes.loading_item_bar}></div>
+                <div className={classes.loading_item_bar}></div>
+              </div>
+              <div className={classes.loading_item}>
+                <div className={classes.loading_item_title}></div>
+                <div className={classes.loading_item_bar}></div>
+                <div className={classes.loading_item_bar}></div>
+              </div>
             </div>
           )}
 
+          {/* {!loading.load && (
+            <div className={classes.loading}>
+              <img src={Infinity} alt="tes" />
+            </div>
+          )} */}
+
           <Divider />
-          {/* <Box component="span">
+          <Box component="span">
             <Pagination
-              count={noOfPages}
+              count={totalPage}
               page={page}
               onChange={handleChange}
               color="primary"
@@ -138,10 +281,10 @@ const ChartOP = ({ getApi }) => {
               variant="outlined"
               shape="rounded"
               boundaryCount={1}
-              disabled={loading.load ? true : false}
+              // disabled={loading.load ? true : false}
               classes={{ ul: classes.paginator }}
             />
-          </Box> */}
+          </Box>
         </>
       }
     </>
