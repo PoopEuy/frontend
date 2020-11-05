@@ -114,7 +114,7 @@ const OPComponent = ({ data }) => {
     if (data) {
       setdataOP(data);
     }
-    console.log(`Build data ${data.project_name}`, data);
+    // console.log(`Build data ${data.project_name}`, data);
   }, [data]);
   return (
     <>
