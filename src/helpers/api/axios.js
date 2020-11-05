@@ -6,9 +6,6 @@ const accessToken =
   "860Y2paeQbjXa0hQo2sV2JVwftxAKZLpDGZUxEpFTk9kvcyYYTvQSMo1R4yL4qN2GV4DJ6K5WjgrSmAP";
 
 const OPToken = "705b7cf8e5d5957f7b5a91223b78b915292d3e50";
-const timezone = "Asia/Jakarta";
-const noc = true;
-const project_name = "Herbert_karanganyar";
 
 export const instanceApt1 = axios.create({
   baseURL: baseURLApt1,
@@ -17,14 +14,7 @@ export const instanceApt1 = axios.create({
   },
 });
 
-export const getTotalEnergy = axios.create({
-  baseURL: baseURLOutProject,
-  headers: {
-    Authorization: `Token ${OPToken}`,
-  },
-});
-
-export const getProjectName = axios.create({
+export const outProjectService = axios.create({
   baseURL: baseURLOutProject,
   headers: {
     Authorization: `Token ${OPToken}`,
