@@ -5,7 +5,7 @@ const param_get_project_name = "/project";
 
 export const opGetLiveData = async (project_name) => {
   let url = `${param_get_live_data}${project_name}`;
-  const result = await service.getTotalEnergy
+  const result = await service.outProjectService
     .get(url)
     .then((res) => {
       return {
@@ -25,7 +25,7 @@ export const opGetLiveData = async (project_name) => {
 
 export const opGetProjectName = async () => {
   let url = `${param_get_project_name}`;
-  const result = await service.getProjectName
+  const result = await service.outProjectService
     .get(url)
     .then((res) => {
       return {
