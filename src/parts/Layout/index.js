@@ -37,7 +37,7 @@ const Layout = ({ children, getApt1Nojs }) => {
   }, []);
 
   const page = listPages();
-  console.log("Layout");
+  // console.log("Layout");
 
   return (
     <>
