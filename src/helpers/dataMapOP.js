@@ -267,7 +267,7 @@ export const dataMapChint = async (res, serial_number) => {
             if (total_energy_a > max_percentage)
               total_energy_a = max_percentage;
             energy_a.push(total_energy_a);
-            color_energy_a.push(green);
+            color_energy_a.push(red);
           }
 
           if (data.energy_b == null) {
@@ -289,7 +289,7 @@ export const dataMapChint = async (res, serial_number) => {
             if (total_energy_b > max_percentage)
               total_energy_b = max_percentage;
             energy_b.push(total_energy_b);
-            color_energy_b.push(green);
+            color_energy_b.push(red);
           }
 
           if (data.energy_c == null) {
@@ -311,7 +311,7 @@ export const dataMapChint = async (res, serial_number) => {
             if (total_energy_c > max_percentage)
               total_energy_c = max_percentage;
             energy_c.push(total_energy_c);
-            color_energy_c.push(green);
+            color_energy_c.push(red);
           }
 
           time_stamp.push(data.time_stamp);
@@ -427,7 +427,7 @@ export const dataMapInverter = async (res, serial_number) => {
             if (total_energy_a > max_percentage)
               total_energy_a = max_percentage;
             energy_a.push(total_energy_a);
-            color_energy_a.push(red);
+            color_energy_a.push(green);
           }
 
           if (data.energy_2 == null) {
@@ -449,7 +449,7 @@ export const dataMapInverter = async (res, serial_number) => {
             if (total_energy_b > max_percentage)
               total_energy_b = max_percentage;
             energy_b.push(total_energy_b);
-            color_energy_b.push(red);
+            color_energy_b.push(green);
           }
 
           time_stamp.push(data.time_stamp);
