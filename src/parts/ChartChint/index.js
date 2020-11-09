@@ -7,7 +7,8 @@ import { useRouter } from "next/router";
 import * as op_service from "@helpers/api/outproject";
 
 let tempOP = [];
-let tempInterval = null;
+var tempInterval = null;
+var tempTimeout = null;
 let status = 0;
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -73,6 +74,7 @@ const ChartChint = ({ ChintProjectName }) => {
   const [loading, setLoading] = useState({ load: true, data: false });
   const [timeInterval, setTimeInterval] = useState();
   const [intervalData, setIntervalData] = useState();
+  const [timeoutData, setTimeoutData] = useState();
   const [totalData, setTotalData] = useState();
   const [currentData, setCurrentData] = useState();
   const [dataOP, setDataOP] = useState(false);
@@ -104,6 +106,12 @@ const ChartChint = ({ ChintProjectName }) => {
         setPage(pages);
       });
     });
+    return () => {
+      console.log("UNMOUNT, clearTimeout:", tempTimeout);
+      console.log("UNMOUNT, clearInterval:", tempInterval);
+      clearTimeout(tempTimeout);
+      clearInterval(tempInterval);
+    }
   }, []);
 
   useEffect(() => {
@@ -146,22 +154,29 @@ const ChartChint = ({ ChintProjectName }) => {
     if (timeInterval && currentData) {
       console.log(`Time to start live : ${timeInterval}s`);
       // console.log("tempInterval ", intervalData);
-      // clearInterval(intervalData);
+      clearTimeout(tempTimeout);
+      clearInterval(tempInterval);
       getData(currentData);
-      setTimeout(() => {
+      let timeout = setTimeout(() => {
         getData(currentData, true);
         let interval = setInterval(() => {
           getData(currentData, true);
         }, intrvl);
         setIntervalData(interval);
       }, timeInterval * 1000);
+      setTimeoutData(timeout);
     }
   }, [currentData]);
 
   useEffect(() => {
+    if (timeoutData) {
+      tempTimeout = timeoutData;
+    }
+  }, [timeoutData]);
+
+  useEffect(() => {
     if (intervalData) {
-      // clearInterval(tempInterval);
-      // tempInterval = intervalData;
+      tempInterval = intervalData;
     }
   }, [intervalData]);
 
