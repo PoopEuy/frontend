@@ -8,6 +8,7 @@ import { Bar } from "react-chartjs-2";
 import clsx from "clsx";
 import TooltipComponent from "@components/TooltipComponent";
 import { Tooltip } from "@material-ui/core";
+import Link from "next/link";
 
 const useStyle = makeStyles((theme) => ({
   chartBox: {
@@ -114,77 +115,67 @@ const OPComponent = ({ data }) => {
     if (data) {
       setdataOP(data);
     }
-    // console.log(`Build data ${data.project_name}`, data);
+    console.log(`Build data ${data.project_name}`, data);
   }, [data]);
   return (
     <>
       {dataOP && (
         <Box className={classes.chartBox} border={2}>
-          <Grid container>
+          {/* <Grid container>
             <span className={classes.title}>
               <Typography paragraph className={classes.textStyle}>
                 {dataOP.project_name}
               </Typography>
             </span>
-          </Grid>
-          {/* <Tooltip
-            title={<span style={{ fontSize: 30 }}>{dataOP.nojs.ip}</span>}
+          </Grid> */}
+          <Tooltip
+            title={<span style={{ fontSize: 30 }}>{dataOP.node_id}</span>}
             leaveDelay={800}
           >
             <Grid container>
               <span className={classes.title}>
                 <Typography paragraph className={classes.textStyle}>
-                  {dataOP.nojs.nojs} {dataOP.nojs.site}
-                </Typography>
-              </span>
-              <span style={{ marginRight: 10 }}>
-                <Typography className={classes.textStyle}>
-                  {dataOP.nojs.lc}
-                  <span
-                    style={{ marginRight: 10, marginLeft: 10 }}
-                    className={clsx({
-                      [classes.bgGreen]: state.pms > 15,
-                      [classes.bgYellow]: state.pms <= 15 && state.pms > 13,
-                      [classes.bgRed]: state.pms < 12,
-                    })}
-                  >
-                    {state.pms}
-                  </span>
-                  <span
-                    className={clsx({
-                      [classes.bgGreen]: state.bv > 52.0,
-                      [classes.bgYellow]: state.bv <= 52.0 && state.bv >= 51.0,
-                      [classes.bgRed]: state.bv < 51.0,
-                    })}
-                  >
-                    {state.bv.toFixed(1)}
-                  </span>
+                  {dataOP.project_name}
                 </Typography>
               </span>
             </Grid>
-          </Tooltip> */}
+          </Tooltip>
 
-          <Box className={classes.chartHarvest}>
-            <Bar
-              data={dataToDataChart({
-                labels: dataOP.labels,
-                data: dataOP.harvest,
-                color: dataOP.color_harvest,
-              })}
-              options={option(0, 100)}
-            />
-          </Box>
+          <Link
+            href={{
+              pathname: "/outproject/chint",
+              query: { project_name: dataOP.project_name },
+            }}
+          >
+            <Box className={classes.chartHarvest}>
+              <Bar
+                data={dataToDataChart({
+                  labels: dataOP.labels,
+                  data: dataOP.harvest,
+                  color: dataOP.color_harvest,
+                })}
+                options={option(0, 100)}
+              />
+            </Box>
+          </Link>
 
-          <Box className={classes.chartEnjoy}>
-            <Bar
-              data={dataToDataChart({
-                labels: dataOP.labels,
-                data: dataOP.enjoy,
-                color: dataOP.color_enjoy,
-              })}
-              options={option(0, 100, true)}
-            />
-          </Box>
+          <Link
+            href={{
+              pathname: "/outproject/inverter",
+              query: { project_name: dataOP.project_name },
+            }}
+          >
+            <Box className={classes.chartEnjoy}>
+              <Bar
+                data={dataToDataChart({
+                  labels: dataOP.labels,
+                  data: dataOP.enjoy,
+                  color: dataOP.color_enjoy,
+                })}
+                options={option(0, 100, true)}
+              />
+            </Box>
+          </Link>
         </Box>
       )}
     </>
