@@ -7,7 +7,8 @@ import { useRouter } from "next/router";
 import * as op_service from "@helpers/api/outproject";
 
 let tempOP = [];
-let tempInterval = null;
+var tempInterval = null;
+var tempTimeout = null;
 let status = 0;
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -73,14 +74,16 @@ const ChartInverter = ({ InverterProjectName }) => {
   const [loading, setLoading] = useState({ load: true, data: false });
   const [timeInterval, setTimeInterval] = useState();
   const [intervalData, setIntervalData] = useState();
+  const [timeoutData, setTimeoutData] = useState();
   const [totalData, setTotalData] = useState();
   const [currentData, setCurrentData] = useState();
   const [dataOP, setDataOP] = useState(false);
 
   const handleChange = (event, value) => {
     let tmp_page = parseInt(router.query.page);
+    let project_name = router.query.project_name;
     if (tmp_page != value) {
-      router.push(`/outproject/inverter?page=${value}`);
+      router.push(`/outproject/inverter?project_name=${project_name}&page=${value}`);
       setPage(value);
     }
   };
@@ -88,12 +91,12 @@ const ChartInverter = ({ InverterProjectName }) => {
   useEffect(() => {
     let pages;
     console.log("init route Inverter", router);
-    if (!router.query.page && !router.asPath.match("page")) {
+    if (!router.query.page && !router.asPath.match("page=")) {
       handleChange("", 1);
     } else {
       pages = parseInt(router.query.page);
-      if (router.asPath.match("page")) {
-        pages = parseInt(router.asPath.split("=")[1]);
+      if (router.asPath.match("page=")) {
+        pages = parseInt(router.asPath.split("page=")[1]);
       }
     }
     initTime().then((init_time) => {
@@ -103,6 +106,12 @@ const ChartInverter = ({ InverterProjectName }) => {
         setPage(pages);
       });
     });
+    return () => {
+      console.log("UNMOUNT, clearTimeout:", tempTimeout);
+      console.log("UNMOUNT, clearInterval:", tempInterval);
+      clearTimeout(tempTimeout);
+      clearInterval(tempInterval);
+    }
   }, []);
 
   useEffect(() => {
@@ -145,22 +154,29 @@ const ChartInverter = ({ InverterProjectName }) => {
     if (timeInterval && currentData) {
       console.log(`Time to start live : ${timeInterval}s`);
       // console.log("tempInterval ", intervalData);
-      // clearInterval(intervalData);
+      clearTimeout(tempTimeout);
+      clearInterval(tempInterval);
       getData(currentData);
-      setTimeout(() => {
+      let timeout = setTimeout(() => {
         getData(currentData, true);
         let interval = setInterval(() => {
           getData(currentData, true);
         }, intrvl);
         setIntervalData(interval);
       }, timeInterval * 1000);
+      setTimeoutData(timeout);
     }
   }, [currentData]);
 
   useEffect(() => {
+    if (timeoutData) {
+      tempTimeout = timeoutData;
+    }
+  }, [timeoutData]);
+
+  useEffect(() => {
     if (intervalData) {
-      // clearInterval(tempInterval);
-      // tempInterval = intervalData;
+      tempInterval = intervalData;
     }
   }, [intervalData]);
 
