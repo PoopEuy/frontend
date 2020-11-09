@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#c1c1c1",
   },
   loading_item_divider: {
-    flex: 1
+    flex: 1,
   },
   loading_item_bar: {
     margin: 10,
@@ -120,7 +120,7 @@ const ChartOP = ({ getApi }) => {
       console.log("UNMOUNT, clearInterval:", tempInterval);
       clearTimeout(tempTimeout);
       clearInterval(tempInterval);
-    }
+    };
   }, []);
 
   useEffect(() => {
@@ -140,22 +140,35 @@ const ChartOP = ({ getApi }) => {
   useEffect(() => {
     console.log("totalData ", totalData);
     console.log("page ", page);
-    if (totalData) {
-      console.log("pass 4");
-      clearInterval(intervalData);
-      let current_data,
-        total_data = totalData;
-      if (total_data.length > view) {
-        current_data = [];
-        for (let i = view * page - view; i < view * page; i++) {
-          if (total_data[i]) {
-            current_data.push(total_data[i]);
+    console.log("PAGES ", totalPage);
+    if (page > totalPage) {
+      router.push(`/outproject?page=${totalPage}`);
+      setPage(totalPage);
+    } else {
+      if (totalData) {
+        initTime().then((init_time) => {
+          setTimeInterval(init_time);
+          console.log("pass 4", totalData);
+          let current_data,
+            total_data = totalData,
+            pages = page;
+          if (!page || page == undefined) {
+            pages = 1;
           }
-        }
-      } else {
-        current_data = total_data;
+          if (total_data.length > view) {
+            current_data = [];
+            for (let i = view * pages - view; i < view * pages; i++) {
+              if (total_data[i]) {
+                current_data.push(total_data[i]);
+              }
+            }
+          } else {
+            current_data = total_data;
+          }
+          console.log("pass 5 ", current_data);
+          setCurrentData(current_data);
+        });
       }
-      setCurrentData(current_data);
     }
   }, [page]);
 
@@ -173,7 +186,8 @@ const ChartOP = ({ getApi }) => {
     if (timeInterval && currentData) {
       console.log(`Time to start live : ${timeInterval}s`);
       // console.log("tempInterval ", intervalData);
-      // clearInterval(intervalData);
+      clearTimeout(tempTimeout);
+      clearInterval(tempInterval);
       getData(currentData);
       let timeout = setTimeout(() => {
         getData(currentData, true);
@@ -188,15 +202,12 @@ const ChartOP = ({ getApi }) => {
 
   useEffect(() => {
     if (timeoutData) {
-      // clearInterval(tempInterval);
-      // tempInterval = timeoutData;
       tempTimeout = timeoutData;
     }
   }, [timeoutData]);
 
   useEffect(() => {
     if (intervalData) {
-      // clearInterval(tempInterval);
       tempInterval = intervalData;
     }
   }, [intervalData]);
