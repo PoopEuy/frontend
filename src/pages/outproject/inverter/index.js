@@ -11,18 +11,24 @@ const OutProjectInverter = () => {
 
   useEffect(() => {
     console.log("ROUTER inverter ", router);
-    if (router.query.project_name) {
-      console.log("Constructor ");
-      setProjectName(router.query.project_name);
+    let project_name;
+    if (router.asPath.match("/outproject/inverter") && !router.query.project_name) {
+      router.push(`/outproject`);
+    } else if (!router.query.project_name && !router.asPath.match("project_name=")) {
+      handleChange("", 1);
+    } else {
+      if (router.query.project_name) {
+        project_name = router.query.project_name;
+      } else if (router.asPath.match("project_name=")) {
+        project_name = router.asPath.split("project_name=")[1];
+        if (project_name.match("page=")) {
+          project_name = project_name.split("&")[0];
+        }
+      }
     }
+    setProjectName(project_name);
   }, []);
 
-  //   if (router.query.project_name) {
-  //     console.log("ROUTER inverter ", router);
-  //     return <ChartInverter getApi={router.query.project_name} />;
-  //   } else {
-  //     return <div>FAILED</div>;
-  //   }
   useEffect(() => {
     if (projectName) {
       setLoading({ load: false, data: true });
