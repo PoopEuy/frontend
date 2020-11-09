@@ -20,12 +20,10 @@ const useStyle = makeStyles((theme) => ({
   chartHarvest: {
     marginRight: 10,
     height: 85,
-    cursor: 'pointer'
   },
   chartEnjoy: {
     marginRight: 10,
     height: 85,
-    cursor: 'pointer'
   },
   textStyle: {
     fontSize: 16,
@@ -109,83 +107,82 @@ const option = (min, max, reverse = false) => {
   };
 };
 
-const OPComponent = ({ data }) => {
+const InverterComponent = ({ data }) => {
   const classes = useStyle();
-  const [dataOP, setdataOP] = useState(false);
+  const [dataInverter, setdataInverter] = useState(false);
 
   useEffect(() => {
     if (data) {
-      setdataOP(data);
+      setdataInverter(data);
     }
-    console.log(`Build data ${data.project_name}`, data);
+    console.log(`Build data Inverter ${data.project_name}`, data);
   }, [data]);
   return (
     <>
-      {dataOP && (
+      {dataInverter && (
         <Box className={classes.chartBox} border={2}>
           {/* <Grid container>
             <span className={classes.title}>
               <Typography paragraph className={classes.textStyle}>
-                {dataOP.project_name}
+                {dataInverter.project_name}
               </Typography>
             </span>
           </Grid> */}
           <Tooltip
-            title={<span style={{ fontSize: 30 }}>{dataOP.node_id}</span>}
+            title={
+              <span style={{ fontSize: 30 }}>{dataInverter.project_name}</span>
+            }
             leaveDelay={800}
           >
             <Grid container>
               <span className={classes.title}>
                 <Typography paragraph className={classes.textStyle}>
-                  {dataOP.project_name}
+                  {dataInverter.serial_number}
                 </Typography>
               </span>
             </Grid>
           </Tooltip>
 
-          <Link
-            href={{
-              pathname: "/outproject/inverter",
-              query: { project_name: dataOP.project_name },
-            }}
-          >
-            <Box className={classes.chartHarvest}>
-              <Bar
-                data={dataToDataChart({
-                  labels: dataOP.labels,
-                  data: dataOP.harvest,
-                  color: dataOP.color_harvest,
-                })}
-                options={option(0, 100)}
-              />
-            </Box>
-          </Link>
+          <Box className={classes.chartEnjoy}>
+            <Bar
+              data={dataToDataChart({
+                labels: dataInverter.labels,
+                data: dataInverter.energy_a,
+                color: dataInverter.color_energy_a,
+              })}
+              options={option(0, 100)}
+            />
+          </Box>
 
-          <Link
-            href={{
-              pathname: "/outproject/chint",
-              query: { project_name: dataOP.project_name },
-            }}
-          >
-            <Box className={classes.chartEnjoy}>
-              <Bar
-                data={dataToDataChart({
-                  labels: dataOP.labels,
-                  data: dataOP.enjoy,
-                  color: dataOP.color_enjoy,
-                })}
-                options={option(0, 100, true)}
-              />
-            </Box>
-          </Link>
+          <Box className={classes.chartEnjoy}>
+            <Bar
+              data={dataToDataChart({
+                labels: dataInverter.labels,
+                data: dataInverter.energy_b,
+                color: dataInverter.color_energy_b,
+              })}
+              options={option(0, 100)}
+            />
+          </Box>
+
+          {/* <Box className={classes.chartEnjoy}>
+            <Bar
+              data={dataToDataChart({
+                labels: dataInverter.labels,
+                data: dataInverter.enjoy,
+                color: dataInverter.color_enjoy,
+              })}
+              options={option(0, 100, true)}
+            />
+          </Box> */}
         </Box>
       )}
     </>
   );
 };
 
-OPComponent.propTypes = {
+InverterComponent.propTypes = {
   data: PropTypes.object,
 };
 
-export default OPComponent;
+export default InverterComponent;

@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles, Divider, Box, Grid } from "@material-ui/core";
 import Pagination from "@material-ui/lab/Pagination";
-import OPComponent from "@components/OPComponent";
-import { dataMapOP } from "@helpers/dataMapOP";
-import { connect } from "react-redux";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import InverterComponent from "@components/InverterComponent";
+import * as dataMapOP from "@helpers/dataMapOP";
 import { useRouter } from "next/router";
-import Infinity from "../../../public/images/Infinity-loading.svg";
 import * as op_service from "@helpers/api/outproject";
-import { FullscreenExit } from "@material-ui/icons";
 
 let tempOP = [];
 var tempInterval = null;
@@ -68,11 +64,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ChartOP = ({ getApi }) => {
+const ChartInverter = ({ InverterProjectName }) => {
   const router = useRouter();
   const classes = useStyles();
-  const view = 1;
-  const [page, setPage] = useState(0);
+  const view = 10;
+  const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const [totalRecord, setTotalRecord] = useState(0);
   const [loading, setLoading] = useState({ load: true, data: false });
@@ -85,33 +81,28 @@ const ChartOP = ({ getApi }) => {
 
   const handleChange = (event, value) => {
     let tmp_page = parseInt(router.query.page);
+    let project_name = router.query.project_name;
     if (tmp_page != value) {
-      router.push(`/outproject?page=${value}`);
+      router.push(`/outproject/inverter?project_name=${project_name}&page=${value}`);
       setPage(value);
     }
   };
 
   useEffect(() => {
     let pages;
-    console.log("init route", router);
-    if (!router.query.page && !router.asPath.match("page")) {
-      console.log("if");
+    console.log("init route Inverter", router);
+    if (!router.query.page && !router.asPath.match("page=")) {
       handleChange("", 1);
     } else {
-      console.log("else");
       pages = parseInt(router.query.page);
-      if (router.asPath.match("page")) {
-        pages = parseInt(router.asPath.split("=")[1]);
+      if (router.asPath.match("page=")) {
+        pages = parseInt(router.asPath.split("page=")[1]);
       }
     }
-    console.log("pass 1");
     initTime().then((init_time) => {
-      console.log("pass 2");
       setTimeInterval(init_time);
       loadData().then((value) => {
-        console.log("pass 3", value);
-        console.log("pass 3", pages);
-        setTotalData(value);
+        // setTotalData(value);
         setPage(pages);
       });
     });
@@ -120,7 +111,7 @@ const ChartOP = ({ getApi }) => {
       console.log("UNMOUNT, clearInterval:", tempInterval);
       clearTimeout(tempTimeout);
       clearInterval(tempInterval);
-    };
+    }
   }, []);
 
   useEffect(() => {
@@ -138,47 +129,24 @@ const ChartOP = ({ getApi }) => {
   }, [totalRecord]);
 
   useEffect(() => {
-    console.log("totalData ", totalData);
-    console.log("page ", page);
-    console.log("PAGES ", totalPage);
-    if (page > totalPage && totalPage != 0) {
-      router.push(`/outproject?page=${totalPage}`);
-      setPage(totalPage);
-    } else {
-      if (totalData) {
-        initTime().then((init_time) => {
-          setTimeInterval(init_time);
-          console.log("pass 4", totalData);
-          let current_data,
-            total_data = totalData,
-            pages = page;
-          if (!page || page == undefined) {
-            pages = 1;
+    if (totalData) {
+      console.log("tempInterval ", intervalData);
+      clearInterval(intervalData);
+      let current_data,
+        total_data = totalData;
+      if (total_data.length > view) {
+        current_data = [];
+        for (let i = view * page - view; i < view * page; i++) {
+          if (total_data[i]) {
+            current_data.push(total_data[i]);
           }
-          if (total_data.length > view) {
-            current_data = [];
-            for (let i = view * pages - view; i < view * pages; i++) {
-              if (total_data[i]) {
-                current_data.push(total_data[i]);
-              }
-            }
-          } else {
-            current_data = total_data;
-          }
-          console.log("pass 5 ", current_data);
-          setCurrentData(current_data);
-        });
+        }
+      } else {
+        current_data = total_data;
       }
+      setCurrentData(current_data);
     }
   }, [page]);
-
-  useEffect(() => {
-    console.log("totalData change ", totalData);
-    console.log("totalData change ", page);
-    if (totalData && page) {
-      setPage(page);
-    }
-  }, [totalData]);
 
   useEffect(() => {
     let intrvl = 300000;
@@ -219,24 +187,39 @@ const ChartOP = ({ getApi }) => {
       setLoading({ load: true, data: false });
     }
     if (value) {
-      value.forEach((project_name, index) => {
-        // console.log(`index ke ${index}`, project_name);
-        if (project_name) {
-          op_service.opGetLiveData(project_name).then(async (res) => {
-            dataMapOP(res.data, project_name, res.node_id).then((val) => {
-              tempOP.push(val);
+      value.forEach((inverter, index) => {
+        dataMapOP.dataMapInverter(inverter.data, inverter.serial_number).then((val) => {
+          tempOP.push(val);
 
-              if (index + 1 == value.length) {
-                if (live) {
-                  setDataOP(false);
-                } else {
-                  setLoading({ load: false, data: true });
-                }
-                setDataOP(tempOP);
-              }
-            });
-          });
-        }
+          if (index + 1 == value.length) {
+            if (live) {
+              setDataOP(false);
+            } else {
+              setLoading({ load: false, data: true });
+            }
+            setDataOP(tempOP);
+          }
+        });
+        // console.log(`index ke ${index}`, project_name);
+        // if (project_name) {
+
+        //   op_service.opGetInverter(project_name).then(async (res) => {
+        //     dataMapOP
+        //       .dataMapInverter(res.data, project_name, res.node_id)
+        //       .then((val) => {
+        //         tempOP.push(val);
+
+        //         if (index + 1 == value.length) {
+        //           if (live) {
+        //             setDataOP(false);
+        //           } else {
+        //             setLoading({ load: false, data: true });
+        //           }
+        //           setDataOP(tempOP);
+        //         }
+        //       });
+        //   });
+        // }
       });
     } else {
       setLoading({ load: false, data: false });
@@ -244,18 +227,36 @@ const ChartOP = ({ getApi }) => {
   };
 
   const loadData = async () => {
-    return new Promise((resolve, reject) => {
-      getApi()
-        .then((res) => {
-          setTotalRecord(res.data.length);
-          setTotalData(res.data);
-          resolve(res.data);
-        })
-        .catch((err) => {
-          console.log("err", err);
-          reject();
-        });
+    return new Promise((resolve) => {
+      console.log("INVERTERPROJECTNAME ", InverterProjectName);
+      if (InverterProjectName) {
+        op_service
+          .opGetInverter(InverterProjectName)
+          .then(async (res) => {
+            console.log("DATA ", res);
+            setTotalRecord(res.data.length);
+            setTotalData(res.data);
+            resolve(res.data);
+          })
+          .catch((err) => {
+            console.log("err", err);
+            reject();
+          });
+      }
     });
+    // return new Promise((resolve, reject) => {
+    //   InverterProjectName()
+    //     .then((res) => {
+    //         console.log("RES InverterProjectName ", res);
+    //       setTotalRecord(res.data.length);
+    //       setTotalData(res.data);
+    //       resolve(res.data);
+    //     })
+    //     .catch((err) => {
+    //       console.log("err", err);
+    //       reject();
+    //     });
+    // });
   };
 
   const initTime = async () => {
@@ -293,7 +294,7 @@ const ChartOP = ({ getApi }) => {
               !loading.load &&
               loading.data &&
               dataOP.map((val, index) => {
-                return <OPComponent key={index} data={val} />;
+                return <InverterComponent key={index} data={val} />;
               })}
           </Grid>
 
@@ -393,4 +394,4 @@ const ChartOP = ({ getApi }) => {
   );
 };
 
-export default ChartOP;
+export default ChartInverter;
