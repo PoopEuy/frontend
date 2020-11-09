@@ -20,10 +20,12 @@ const useStyle = makeStyles((theme) => ({
   chartHarvest: {
     marginRight: 10,
     height: 85,
+    cursor: 'pointer'
   },
   chartEnjoy: {
     marginRight: 10,
     height: 85,
+    cursor: 'pointer'
   },
   textStyle: {
     fontSize: 16,
@@ -143,7 +145,7 @@ const OPComponent = ({ data }) => {
 
           <Link
             href={{
-              pathname: "/outproject/chint",
+              pathname: "/outproject/inverter",
               query: { project_name: dataOP.project_name },
             }}
           >
@@ -161,7 +163,7 @@ const OPComponent = ({ data }) => {
 
           <Link
             href={{
-              pathname: "/outproject/inverter",
+              pathname: "/outproject/chint",
               query: { project_name: dataOP.project_name },
             }}
           >
