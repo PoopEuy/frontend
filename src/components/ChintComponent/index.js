@@ -150,7 +150,7 @@ const ChintComponent = ({ data }) => {
                 data: dataChint.energy_a,
                 color: dataChint.color_energy_a,
               })}
-              options={option(0, 100)}
+              options={option(0, 100, true)}
             />
           </Box>
 
@@ -161,7 +161,7 @@ const ChintComponent = ({ data }) => {
                 data: dataChint.energy_b,
                 color: dataChint.color_energy_b,
               })}
-              options={option(0, 100)}
+              options={option(0, 100, true)}
             />
           </Box>
 
@@ -172,7 +172,7 @@ const ChintComponent = ({ data }) => {
                 data: dataChint.energy_c,
                 color: dataChint.color_energy_c,
               })}
-              options={option(0, 100)}
+              options={option(0, 100, true)}
             />
           </Box>
 
