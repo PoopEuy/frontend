@@ -30,23 +30,24 @@ const getMaxOP = async (data) => {
 const getMaxChint = async (data) => {
   let promise = new Promise((resolve, reject) => {
     if (data && data.length) {
+      console.log("IF");
       let energy_a = { max_avg: 0, length: 0 };
       let energy_b = { max_avg: 0, length: 0 };
       let energy_c = { max_avg: 0, length: 0 };
       data.forEach((el) => {
         energy_a.max_avg =
-          el.energy_a_total > energy_a.max_avg
-            ? el.energy_a_total
+          el.energy_a > energy_a.max_avg
+            ? el.energy_a
             : energy_a.max_avg;
 
         energy_b.max_avg =
-          el.energy_b_total > energy_b.max_avg
-            ? el.energy_b_total
+          el.energy_b > energy_b.max_avg
+            ? el.energy_b
             : energy_b.max_avg;
 
         energy_c.max_avg =
-          el.energy_c_total > energy_c.max_avg
-            ? el.energy_c_total
+          el.energy_c > energy_c.max_avg
+            ? el.energy_c
             : energy_c.max_avg;
       });
       resolve({
@@ -55,6 +56,7 @@ const getMaxChint = async (data) => {
         energy_c: energy_c.max_avg,
       });
     } else {
+      console.log("Else");
       resolve({ energy_a: 0, energy_b: 0, energy_c: 0 });
     }
   });
@@ -68,13 +70,13 @@ const getMaxInverter = async (data) => {
       let energy_b = { max_avg: 0, length: 0 };
       data.forEach((el) => {
         energy_a.max_avg =
-          el.energy_a_total > energy_a.max_avg
-            ? el.energy_a_total
+          el.energy_1 > energy_a.max_avg
+            ? el.energy_1
             : energy_a.max_avg;
 
         energy_b.max_avg =
-          el.energy_b_total > energy_b.max_avg
-            ? el.energy_b_total
+          el.energy_2 > energy_b.max_avg
+            ? el.energy_2
             : energy_b.max_avg;
 
       });
@@ -89,7 +91,7 @@ const getMaxInverter = async (data) => {
   return promise;
 };
 
-export const dataMapOP = async (res, project_name) => {
+export const dataMapOP = async (res, project_name, node_id) => {
   return new Promise(async (resolve, reject) => {
     let max_average;
     let max_percentage = 100;
@@ -180,13 +182,15 @@ export const dataMapOP = async (res, project_name) => {
 
         chart = {
           project_name: project_name,
-          time_stamp: time_stamp.reverse(),
-          harvest: harvest.reverse(),
-          enjoy: enjoy.reverse(),
-          color_harvest: color_harvest.reverse(),
-          color_enjoy: color_enjoy.reverse(),
+          node_id: node_id,
+          time_stamp: time_stamp,
+          harvest: harvest,
+          enjoy: enjoy,
+          color_harvest: color_harvest,
+          color_enjoy: color_enjoy,
           labels: labels,
         };
+        console.log("chart ", chart);
         resolve(chart);
       } else {
         for (let i = 1; i <= 36; i++) {
@@ -199,14 +203,16 @@ export const dataMapOP = async (res, project_name) => {
         }
         chart = {
           project_name: project_name,
-          time_stamp: time_stamp.reverse(),
-          harvest: harvest.reverse(),
-          enjoy: enjoy.reverse(),
-          color_harvest: color_harvest.reverse(),
-          color_enjoy: color_enjoy.reverse(),
+          node_id: node_id,
+          time_stamp: time_stamp,
+          harvest: harvest,
+          enjoy: enjoy,
+          color_harvest: color_harvest,
+          color_enjoy: color_enjoy,
           labels: labels,
         };
         resolve(chart);
+        console.log("chart ", chart);
       }
     });
   });
@@ -234,6 +240,7 @@ export const dataMapChint = async (res, serial_number) => {
 
     console.log(`${serial_number} is `, res);
     await getMaxChint(res).then((val) => {
+      console.log("max Chint ", val);
       max_average = {
         energy_a: val.energy_a,
         energy_b: val.energy_b,
@@ -241,14 +248,14 @@ export const dataMapChint = async (res, serial_number) => {
       };
       if (res) {
         res.forEach((data, index) => {
-          if (data.energy_a_total == null) {
+          if (data.energy_a == null) {
             energy_a.push(100);
             color_energy_a.push(black);
           } else {
             total_energy_a = Math.abs(
               Math.round(
                 percentage(
-                  data.energy_a_total,
+                  data.energy_a,
                   0,
                   max_average.energy_a,
                   0,
@@ -256,21 +263,21 @@ export const dataMapChint = async (res, serial_number) => {
                 )
               )
             );
-            if (data.energy_a_total == 0) total_energy_a = 0;
+            if (data.energy_a == 0) total_energy_a = 0;
             if (total_energy_a > max_percentage)
               total_energy_a = max_percentage;
             energy_a.push(total_energy_a);
             color_energy_a.push(green);
           }
 
-          if (data.energy_b_total == null) {
+          if (data.energy_b == null) {
             energy_b.push(100);
             color_energy_b.push(black);
           } else {
             total_energy_b = Math.abs(
               Math.round(
                 percentage(
-                  data.energy_b_total,
+                  data.energy_b,
                   0,
                   max_average.energy_b,
                   0,
@@ -278,21 +285,21 @@ export const dataMapChint = async (res, serial_number) => {
                 )
               )
             );
-            if (data.energy_b_total == 0) total_energy_b = 0;
+            if (data.energy_b == 0) total_energy_b = 0;
             if (total_energy_b > max_percentage)
               total_energy_b = max_percentage;
             energy_b.push(total_energy_b);
-            color_energy_b.push(red);
+            color_energy_b.push(green);
           }
 
-          if (data.energy_c_total == null) {
+          if (data.energy_c == null) {
             energy_c.push(100);
             color_energy_c.push(black);
           } else {
             total_energy_c = Math.abs(
               Math.round(
                 percentage(
-                  data.energy_c_total,
+                  data.energy_c,
                   0,
                   max_average.energy_c,
                   0,
@@ -300,11 +307,11 @@ export const dataMapChint = async (res, serial_number) => {
                 )
               )
             );
-            if (data.energy_c_total == 0) total_energy_c = 0;
+            if (data.energy_c == 0) total_energy_c = 0;
             if (total_energy_c > max_percentage)
               total_energy_c = max_percentage;
             energy_c.push(total_energy_c);
-            color_energy_c.push(red);
+            color_energy_c.push(green);
           }
 
           time_stamp.push(data.time_stamp);
@@ -337,13 +344,13 @@ export const dataMapChint = async (res, serial_number) => {
 
         chart = {
           serial_number: serial_number,
-          time_stamp: time_stamp.reverse(),
-          energy_a: energy_a.reverse(),
-          energy_b: energy_b.reverse(),
-          energy_c: energy_c.reverse(),
-          color_energy_a: color_energy_a.reverse(),
-          color_energy_b: color_energy_b.reverse(),
-          color_energy_c: color_energy_c.reverse(),
+          time_stamp: time_stamp,
+          energy_a: energy_a,
+          energy_b: energy_b,
+          energy_c: energy_c,
+          color_energy_a: color_energy_a,
+          color_energy_b: color_energy_b,
+          color_energy_c: color_energy_c,
           labels: labels,
         };
         resolve(chart);
@@ -360,13 +367,13 @@ export const dataMapChint = async (res, serial_number) => {
         }
         chart = {
           serial_number: serial_number,
-          time_stamp: time_stamp.reverse(),
-          energy_a: energy_a.reverse(),
-          energy_b: energy_b.reverse(),
-          energy_c: energy_c.reverse(),
-          color_energy_a: color_energy_a.reverse(),
-          color_energy_b: color_energy_b.reverse(),
-          color_energy_c: color_energy_c.reverse(),
+          time_stamp: time_stamp,
+          energy_a: energy_a,
+          energy_b: energy_b,
+          energy_c: energy_c,
+          color_energy_a: color_energy_a,
+          color_energy_b: color_energy_b,
+          color_energy_c: color_energy_c,
           labels: labels,
         };
         resolve(chart);
@@ -401,14 +408,14 @@ export const dataMapInverter = async (res, serial_number) => {
       };
       if (res) {
         res.forEach((data, index) => {
-          if (data.energy_a_total == null) {
+          if (data.energy_1 == null) {
             energy_a.push(100);
             color_energy_a.push(black);
           } else {
             total_energy_a = Math.abs(
               Math.round(
                 percentage(
-                  data.energy_a_total,
+                  data.energy_1,
                   0,
                   max_average.energy_a,
                   0,
@@ -416,21 +423,21 @@ export const dataMapInverter = async (res, serial_number) => {
                 )
               )
             );
-            if (data.energy_a_total == 0) total_energy_a = 0;
+            if (data.energy_1 == 0) total_energy_a = 0;
             if (total_energy_a > max_percentage)
               total_energy_a = max_percentage;
             energy_a.push(total_energy_a);
-            color_energy_a.push(green);
+            color_energy_a.push(red);
           }
 
-          if (data.energy_b_total == null) {
+          if (data.energy_2 == null) {
             energy_b.push(100);
             color_energy_b.push(black);
           } else {
             total_energy_b = Math.abs(
               Math.round(
                 percentage(
-                  data.energy_b_total,
+                  data.energy_2,
                   0,
                   max_average.energy_b,
                   0,
@@ -438,7 +445,7 @@ export const dataMapInverter = async (res, serial_number) => {
                 )
               )
             );
-            if (data.energy_b_total == 0) total_energy_b = 0;
+            if (data.energy_2 == 0) total_energy_b = 0;
             if (total_energy_b > max_percentage)
               total_energy_b = max_percentage;
             energy_b.push(total_energy_b);
@@ -471,11 +478,11 @@ export const dataMapInverter = async (res, serial_number) => {
 
         chart = {
           serial_number: serial_number,
-          time_stamp: time_stamp.reverse(),
-          energy_a: energy_a.reverse(),
-          energy_b: energy_b.reverse(),
-          color_energy_a: color_energy_a.reverse(),
-          color_energy_b: color_energy_b.reverse(),
+          time_stamp: time_stamp,
+          energy_a: energy_a,
+          energy_b: energy_b,
+          color_energy_a: color_energy_a,
+          color_energy_b: color_energy_b,
           labels: labels,
         };
         resolve(chart);
@@ -490,11 +497,11 @@ export const dataMapInverter = async (res, serial_number) => {
         }
         chart = {
           serial_number: serial_number,
-          time_stamp: time_stamp.reverse(),
-          energy_a: energy_a.reverse(),
-          energy_b: energy_b.reverse(),
-          color_energy_a: color_energy_a.reverse(),
-          color_energy_b: color_energy_b.reverse(),
+          time_stamp: time_stamp,
+          energy_a: energy_a,
+          energy_b: energy_b,
+          color_energy_a: color_energy_a,
+          color_energy_b: color_energy_b,
           labels: labels,
         };
         resolve(chart);
