@@ -141,7 +141,7 @@ const ChartOP = ({ getApi }) => {
     console.log("totalData ", totalData);
     console.log("page ", page);
     console.log("PAGES ", totalPage);
-    if (page > totalPage) {
+    if (page > totalPage && totalPage != 0) {
       router.push(`/outproject?page=${totalPage}`);
       setPage(totalPage);
     } else {
@@ -172,13 +172,13 @@ const ChartOP = ({ getApi }) => {
     }
   }, [page]);
 
-  // useEffect(() => {
-  //   console.log("totalData change ", totalData);
-  //   console.log("totalData change ", page);
-  //   if (totalData && page) {
-  //     setPage(page);
-  //   }
-  // }, [totalData]);
+  useEffect(() => {
+    console.log("totalData change ", totalData);
+    console.log("totalData change ", page);
+    if (totalData && page) {
+      setPage(page);
+    }
+  }, [totalData]);
 
   useEffect(() => {
     let intrvl = 300000;
