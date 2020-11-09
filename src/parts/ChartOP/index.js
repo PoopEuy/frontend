@@ -11,6 +11,8 @@ import * as op_service from "@helpers/api/outproject";
 import { FullscreenExit } from "@material-ui/icons";
 
 let tempOP = [];
+var tempInterval = null;
+var tempTimeout = null;
 let status = 0;
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   loading_container: {
     flexWrap: "wrap",
     display: "flex",
-    justifyContent: "flex-start",
+    justifyContent: "center",
   },
   loading_item: {
     width: 400,
@@ -41,11 +43,23 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: 10,
     backgroundColor: "#eaeaea",
   },
+  loading_item_header: {
+    display: "flex",
+  },
   loading_item_title: {
     width: 100,
     height: 23,
     marginLeft: 10,
     backgroundColor: "#c1c1c1",
+  },
+  loading_item_icon: {
+    width: 35,
+    height: 23,
+    marginRight: 10,
+    backgroundColor: "#c1c1c1",
+  },
+  loading_item_divider: {
+    flex: 1
   },
   loading_item_bar: {
     margin: 10,
@@ -57,13 +71,14 @@ const useStyles = makeStyles((theme) => ({
 const ChartOP = ({ getApi }) => {
   const router = useRouter();
   const classes = useStyles();
-  const view = 10;
-  const [page, setPage] = useState(1);
+  const view = 1;
+  const [page, setPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const [totalRecord, setTotalRecord] = useState(0);
   const [loading, setLoading] = useState({ load: true, data: false });
   const [timeInterval, setTimeInterval] = useState();
   const [intervalData, setIntervalData] = useState();
+  const [timeoutData, setTimeoutData] = useState();
   const [totalData, setTotalData] = useState();
   const [currentData, setCurrentData] = useState();
   const [dataOP, setDataOP] = useState(false);
@@ -80,20 +95,32 @@ const ChartOP = ({ getApi }) => {
     let pages;
     console.log("init route", router);
     if (!router.query.page && !router.asPath.match("page")) {
+      console.log("if");
       handleChange("", 1);
     } else {
+      console.log("else");
       pages = parseInt(router.query.page);
       if (router.asPath.match("page")) {
         pages = parseInt(router.asPath.split("=")[1]);
       }
     }
+    console.log("pass 1");
     initTime().then((init_time) => {
+      console.log("pass 2");
       setTimeInterval(init_time);
       loadData().then((value) => {
+        console.log("pass 3", value);
+        console.log("pass 3", pages);
         setTotalData(value);
         setPage(pages);
       });
     });
+    return () => {
+      console.log("UNMOUNT, clearTimeout:", tempTimeout);
+      console.log("UNMOUNT, clearInterval:", tempInterval);
+      clearTimeout(tempTimeout);
+      clearInterval(tempInterval);
+    }
   }, []);
 
   useEffect(() => {
@@ -111,7 +138,11 @@ const ChartOP = ({ getApi }) => {
   }, [totalRecord]);
 
   useEffect(() => {
+    console.log("totalData ", totalData);
+    console.log("page ", page);
     if (totalData) {
+      console.log("pass 4");
+      clearInterval(intervalData);
       let current_data,
         total_data = totalData;
       if (total_data.length > view) {
@@ -128,39 +159,69 @@ const ChartOP = ({ getApi }) => {
     }
   }, [page]);
 
+  // useEffect(() => {
+  //   console.log("totalData change ", totalData);
+  //   console.log("totalData change ", page);
+  //   if (totalData && page) {
+  //     setPage(page);
+  //   }
+  // }, [totalData]);
+
   useEffect(() => {
     let intrvl = 300000;
     // let intrvl = 60000;
     if (timeInterval && currentData) {
+      console.log(`Time to start live : ${timeInterval}s`);
+      // console.log("tempInterval ", intervalData);
+      // clearInterval(intervalData);
       getData(currentData);
-      setTimeout(() => {
+      let timeout = setTimeout(() => {
         getData(currentData, true);
         let interval = setInterval(() => {
           getData(currentData, true);
         }, intrvl);
         setIntervalData(interval);
       }, timeInterval * 1000);
+      setTimeoutData(timeout);
     }
   }, [currentData]);
+
+  useEffect(() => {
+    if (timeoutData) {
+      // clearInterval(tempInterval);
+      // tempInterval = timeoutData;
+      tempTimeout = timeoutData;
+    }
+  }, [timeoutData]);
+
+  useEffect(() => {
+    if (intervalData) {
+      // clearInterval(tempInterval);
+      tempInterval = intervalData;
+    }
+  }, [intervalData]);
 
   const getData = async (value, live = false) => {
     console.log(`getData live: ${live}`, value);
     tempOP = [];
-    setLoading({ load: true, data: false });
+    if (!live) {
+      setLoading({ load: true, data: false });
+    }
     if (value) {
       value.forEach((project_name, index) => {
-        console.log(`index ke ${index}`, project_name);
+        // console.log(`index ke ${index}`, project_name);
         if (project_name) {
           op_service.opGetLiveData(project_name).then(async (res) => {
-            dataMapOP(res.data, project_name).then((val) => {
+            dataMapOP(res.data, project_name, res.node_id).then((val) => {
               tempOP.push(val);
 
               if (index + 1 == value.length) {
                 if (live) {
                   setDataOP(false);
+                } else {
+                  setLoading({ load: false, data: true });
                 }
                 setDataOP(tempOP);
-                setLoading({ load: false, data: true });
               }
             });
           });
@@ -232,32 +293,62 @@ const ChartOP = ({ getApi }) => {
           {loading.load && (
             <div className={classes.loading_container}>
               <div className={classes.loading_item}>
-                <div className={classes.loading_item_title}></div>
+                <div className={classes.loading_item_header}>
+                  <div className={classes.loading_item_title}></div>
+                  <div className={classes.loading_item_divider}></div>
+                  <div className={classes.loading_item_icon}></div>
+                  <div className={classes.loading_item_icon}></div>
+                </div>
                 <div className={classes.loading_item_bar}></div>
                 <div className={classes.loading_item_bar}></div>
               </div>
               <div className={classes.loading_item}>
-                <div className={classes.loading_item_title}></div>
+                <div className={classes.loading_item_header}>
+                  <div className={classes.loading_item_title}></div>
+                  <div className={classes.loading_item_divider}></div>
+                  <div className={classes.loading_item_icon}></div>
+                  <div className={classes.loading_item_icon}></div>
+                </div>
                 <div className={classes.loading_item_bar}></div>
                 <div className={classes.loading_item_bar}></div>
               </div>
               <div className={classes.loading_item}>
-                <div className={classes.loading_item_title}></div>
+                <div className={classes.loading_item_header}>
+                  <div className={classes.loading_item_title}></div>
+                  <div className={classes.loading_item_divider}></div>
+                  <div className={classes.loading_item_icon}></div>
+                  <div className={classes.loading_item_icon}></div>
+                </div>
                 <div className={classes.loading_item_bar}></div>
                 <div className={classes.loading_item_bar}></div>
               </div>
               <div className={classes.loading_item}>
-                <div className={classes.loading_item_title}></div>
+                <div className={classes.loading_item_header}>
+                  <div className={classes.loading_item_title}></div>
+                  <div className={classes.loading_item_divider}></div>
+                  <div className={classes.loading_item_icon}></div>
+                  <div className={classes.loading_item_icon}></div>
+                </div>
                 <div className={classes.loading_item_bar}></div>
                 <div className={classes.loading_item_bar}></div>
               </div>
               <div className={classes.loading_item}>
-                <div className={classes.loading_item_title}></div>
+                <div className={classes.loading_item_header}>
+                  <div className={classes.loading_item_title}></div>
+                  <div className={classes.loading_item_divider}></div>
+                  <div className={classes.loading_item_icon}></div>
+                  <div className={classes.loading_item_icon}></div>
+                </div>
                 <div className={classes.loading_item_bar}></div>
                 <div className={classes.loading_item_bar}></div>
               </div>
               <div className={classes.loading_item}>
-                <div className={classes.loading_item_title}></div>
+                <div className={classes.loading_item_header}>
+                  <div className={classes.loading_item_title}></div>
+                  <div className={classes.loading_item_divider}></div>
+                  <div className={classes.loading_item_icon}></div>
+                  <div className={classes.loading_item_icon}></div>
+                </div>
                 <div className={classes.loading_item_bar}></div>
                 <div className={classes.loading_item_bar}></div>
               </div>
@@ -281,7 +372,7 @@ const ChartOP = ({ getApi }) => {
               variant="outlined"
               shape="rounded"
               boundaryCount={1}
-              // disabled={loading.load ? true : false}
+              disabled={loading.load ? true : false}
               classes={{ ul: classes.paginator }}
             />
           </Box>
