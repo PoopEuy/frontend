@@ -9,6 +9,7 @@ import * as op_service from "@helpers/api/outproject";
 let tempOP = [];
 var tempInterval = null;
 var tempTimeout = null;
+var tempTotalData = null;
 let status = 0;
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,7 +69,7 @@ const ChartChint = ({ ChintProjectName }) => {
   const router = useRouter();
   const classes = useStyles();
   const view = 10;
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const [totalRecord, setTotalRecord] = useState(0);
   const [loading, setLoading] = useState({ load: true, data: false });
@@ -83,7 +84,9 @@ const ChartChint = ({ ChintProjectName }) => {
     let tmp_page = parseInt(router.query.page);
     let project_name = router.query.project_name;
     if (tmp_page != value) {
-      router.push(`/outproject/chint?project_name=${project_name}&page=${value}`);
+      router.push(
+        `/outproject/chint?project_name=${project_name}&page=${value}`
+      );
       setPage(value);
     }
   };
@@ -111,7 +114,7 @@ const ChartChint = ({ ChintProjectName }) => {
       console.log("UNMOUNT, clearInterval:", tempInterval);
       clearTimeout(tempTimeout);
       clearInterval(tempInterval);
-    }
+    };
   }, []);
 
   useEffect(() => {
@@ -130,21 +133,22 @@ const ChartChint = ({ ChintProjectName }) => {
 
   useEffect(() => {
     if (totalData) {
-      console.log("tempInterval ", intervalData);
-      clearInterval(intervalData);
-      let current_data,
-        total_data = totalData;
-      if (total_data.length > view) {
-        current_data = [];
-        for (let i = view * page - view; i < view * page; i++) {
-          if (total_data[i]) {
-            current_data.push(total_data[i]);
+      initTime().then((init_time) => {
+        setTimeInterval(init_time);
+        let current_data,
+          total_data = totalData;
+        if (total_data.length > view) {
+          current_data = [];
+          for (let i = view * page - view; i < view * page; i++) {
+            if (total_data[i]) {
+              current_data.push(total_data[i]);
+            }
           }
+        } else {
+          current_data = total_data;
         }
-      } else {
-        current_data = total_data;
-      }
-      setCurrentData(current_data);
+        setCurrentData(current_data);
+      });
     }
   }, [page]);
 
