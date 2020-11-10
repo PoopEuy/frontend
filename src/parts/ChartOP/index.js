@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
 const ChartOP = ({ getApi }) => {
   const router = useRouter();
   const classes = useStyles();
-  const view = 1;
+  const view = 10;
   const [page, setPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const [totalRecord, setTotalRecord] = useState(0);
