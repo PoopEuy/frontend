@@ -110,8 +110,6 @@ const ChartChint = ({ ChintProjectName }) => {
       });
     });
     return () => {
-      console.log("UNMOUNT, clearTimeout:", tempTimeout);
-      console.log("UNMOUNT, clearInterval:", tempInterval);
       clearTimeout(tempTimeout);
       clearInterval(tempInterval);
     };
