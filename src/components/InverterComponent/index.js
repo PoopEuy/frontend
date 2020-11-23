@@ -76,6 +76,7 @@ const option = (min, max, reverse = false) => {
     },
     maintainAspectRatio: false,
     responsive: true,
+    animation: false,
     scales: {
       yAxes: [
         {

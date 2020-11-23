@@ -9,7 +9,8 @@ import * as op_service from "@helpers/api/outproject";
 let tempOP = [];
 var tempInterval = null;
 var tempTimeout = null;
-let status = 0;
+var count = 0;
+var stateSyncTmp = null;
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -68,7 +69,7 @@ const ChartInverter = ({ InverterProjectName }) => {
   const router = useRouter();
   const classes = useStyles();
   const view = 10;
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const [totalRecord, setTotalRecord] = useState(0);
   const [loading, setLoading] = useState({ load: true, data: false });
@@ -83,12 +84,52 @@ const ChartInverter = ({ InverterProjectName }) => {
     let tmp_page = parseInt(router.query.page);
     let project_name = router.query.project_name;
     if (tmp_page != value) {
-      router.push(`/outproject/inverter?project_name=${project_name}&page=${value}`);
+      router.push(
+        `/outproject/inverter?project_name=${project_name}&page=${value}`
+      );
       setPage(value);
     }
   };
 
   useEffect(() => {
+    stateSyncTmp = stateSync(
+      (isTotalData, isPage, isTotalRecord, isCurrentData) => {
+        if (count == 0) {
+          if (
+            isTotalData &&
+            isTotalData != undefined &&
+            isPage &&
+            isPage != undefined
+          ) {
+            console.log("isTotalData is ", isTotalData);
+            let current_data,
+              total_data = totalData ? totalData : isTotalData,
+              cur_page = page ? page : isPage;
+            if (total_data.length > view) {
+              current_data = [];
+              for (let i = view * cur_page - view; i < view * cur_page; i++) {
+                if (total_data[i]) {
+                  current_data.push(total_data[i]);
+                }
+              }
+            } else {
+              current_data = total_data;
+            }
+            count = 1;
+            setCurrentData(current_data);
+          }
+        }
+        // if (isPage &&isPage != undefined) {
+        //   console.log("isPage is ", isPage);
+        // }
+        // if (isTotalRecord && isTotalRecord != undefined) {
+        //   console.log("isTotalRecord is ", isTotalRecord);
+        // }
+        // if (isCurrentData && isCurrentData != undefined) {
+        //   console.log("isCurrentData is ", isCurrentData);
+        // }
+      }
+    );
     let pages;
     console.log("init route Inverter", router);
     if (!router.query.page && !router.asPath.match("page=")) {
@@ -102,8 +143,9 @@ const ChartInverter = ({ InverterProjectName }) => {
     initTime().then((init_time) => {
       setTimeInterval(init_time);
       loadData().then((value) => {
-        // setTotalData(value);
-        setPage(pages);
+        if (pages != undefined) {
+          setPage(pages);
+        }
       });
     });
     return () => {
@@ -111,7 +153,7 @@ const ChartInverter = ({ InverterProjectName }) => {
       console.log("UNMOUNT, clearInterval:", tempInterval);
       clearTimeout(tempTimeout);
       clearInterval(tempInterval);
-    }
+    };
   }, []);
 
   useEffect(() => {
@@ -129,31 +171,43 @@ const ChartInverter = ({ InverterProjectName }) => {
   }, [totalRecord]);
 
   useEffect(() => {
-    if (totalData) {
-      console.log("tempInterval ", intervalData);
-      clearInterval(intervalData);
-      let current_data,
-        total_data = totalData;
-      if (total_data.length > view) {
-        current_data = [];
-        for (let i = view * page - view; i < view * page; i++) {
-          if (total_data[i]) {
-            current_data.push(total_data[i]);
+    console.log("CHANGE PAGE ", page);
+    if ((page && page != undefined) || page != NaN) {
+      stateSyncTmp.setIsPage(page);
+    }
+    if (page > totalPage && totalPage != 0) {
+      router.push(`/outproject/inverter?project_name=${InverterProjectName}&page=${totalPage}`);
+      setPage(totalPage);
+    } else {
+      if (totalData) {
+        initTime().then((init_time) => {
+          setTimeInterval(init_time);
+          let current_data,
+            total_data = totalData;
+          if (total_data.length > view) {
+            current_data = [];
+            for (let i = view * page - view; i < view * page; i++) {
+              if (total_data[i]) {
+                current_data.push(total_data[i]);
+              }
+            }
+          } else {
+            current_data = total_data;
           }
-        }
-      } else {
-        current_data = total_data;
+          setCurrentData(current_data);
+        });
       }
-      setCurrentData(current_data);
     }
   }, [page]);
 
   useEffect(() => {
     let intrvl = 300000;
     // let intrvl = 60000;
+    if (currentData != undefined) {
+      stateSyncTmp.setIsCurrentData(currentData);
+    }
     if (timeInterval && currentData) {
       console.log(`Time to start live : ${timeInterval}s`);
-      // console.log("tempInterval ", intervalData);
       clearTimeout(tempTimeout);
       clearInterval(tempInterval);
       getData(currentData);
@@ -180,6 +234,12 @@ const ChartInverter = ({ InverterProjectName }) => {
     }
   }, [intervalData]);
 
+  useEffect(() => {
+    if (totalData) {
+      stateSyncTmp.setIsTotalData(totalData);
+    }
+  }, [totalData]);
+
   const getData = async (value, live = false) => {
     console.log(`getData live: ${live}`, value);
     tempOP = [];
@@ -188,38 +248,20 @@ const ChartInverter = ({ InverterProjectName }) => {
     }
     if (value) {
       value.forEach((inverter, index) => {
-        dataMapOP.dataMapInverter(inverter.data, inverter.serial_number).then((val) => {
-          tempOP.push(val);
+        dataMapOP
+          .dataMapInverter(inverter.data, inverter.serial_number)
+          .then((val) => {
+            tempOP.push(val);
 
-          if (index + 1 == value.length) {
-            if (live) {
-              setDataOP(false);
-            } else {
-              setLoading({ load: false, data: true });
+            if (index + 1 == value.length) {
+              if (live) {
+                setDataOP(false);
+              } else {
+                setLoading({ load: false, data: true });
+              }
+              setDataOP(tempOP);
             }
-            setDataOP(tempOP);
-          }
-        });
-        // console.log(`index ke ${index}`, project_name);
-        // if (project_name) {
-
-        //   op_service.opGetInverter(project_name).then(async (res) => {
-        //     dataMapOP
-        //       .dataMapInverter(res.data, project_name, res.node_id)
-        //       .then((val) => {
-        //         tempOP.push(val);
-
-        //         if (index + 1 == value.length) {
-        //           if (live) {
-        //             setDataOP(false);
-        //           } else {
-        //             setLoading({ load: false, data: true });
-        //           }
-        //           setDataOP(tempOP);
-        //         }
-        //       });
-        //   });
-        // }
+          });
       });
     } else {
       setLoading({ load: false, data: false });
@@ -244,19 +286,6 @@ const ChartInverter = ({ InverterProjectName }) => {
           });
       }
     });
-    // return new Promise((resolve, reject) => {
-    //   InverterProjectName()
-    //     .then((res) => {
-    //         console.log("RES InverterProjectName ", res);
-    //       setTotalRecord(res.data.length);
-    //       setTotalData(res.data);
-    //       resolve(res.data);
-    //     })
-    //     .catch((err) => {
-    //       console.log("err", err);
-    //       reject();
-    //     });
-    // });
   };
 
   const initTime = async () => {
@@ -278,6 +307,45 @@ const ChartInverter = ({ InverterProjectName }) => {
       }
       resolve((time.second += 60 * time.minute));
     });
+  };
+
+  var stateSync = (callback) => {
+    let isTotalData = false;
+    let isPage = false;
+    let isTotalRecord = false;
+    let isCurrentData = false;
+
+    return {
+      getIsTotalData: function () {
+        return isTotalData;
+      },
+      getIsPage: function () {
+        return isPage;
+      },
+      getIsTotalRecord: function () {
+        return isTotalRecord;
+      },
+      getIsCurrentData: function () {
+        return isCurrentData;
+      },
+
+      setIsTotalData: function (p) {
+        isTotalData = p;
+        callback(isTotalData, isPage, isTotalRecord, isCurrentData);
+      },
+      setIsPage: function (p) {
+        isPage = p;
+        callback(isTotalData, isPage, isTotalRecord, isCurrentData);
+      },
+      setIsTotalRecord: function (p) {
+        isTotalRecord = p;
+        callback(isTotalData, isPage, isTotalRecord, isCurrentData);
+      },
+      setIsCurrentData: function (p) {
+        isCurrentData = p;
+        callback(isTotalData, isPage, isTotalRecord, isCurrentData);
+      },
+    };
   };
 
   return (
