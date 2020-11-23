@@ -11,6 +11,7 @@ import { connect } from "react-redux";
 
 //components OR parts local
 import { getApt1Nojs } from "@redux/apt1/nojs/action";
+import { WsLogger, WsConnect } from "@redux/apt1/logger/action";
 import DrawerHeader from "@parts/DrawerHeader";
 import Apt1 from "@components/ListPages/apt1";
 import { useRouter } from "next/router";
@@ -34,10 +35,11 @@ const Layout = ({ children, getApt1Nojs }) => {
 
   useEffect(() => {
     getApt1Nojs();
+    // WsConnect();
+    // WsLogger();
   }, []);
 
   const page = listPages();
-  console.log("Layout");
 
   return (
     <>
@@ -53,6 +55,8 @@ const Layout = ({ children, getApt1Nojs }) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getApt1Nojs: bindActionCreators(getApt1Nojs, dispatch),
+    // WsLogger: bindActionCreators(WsLogger, dispatch),
+    // WsConnect: bindActionCreators(WsConnect, dispatch),
   };
 };
 
