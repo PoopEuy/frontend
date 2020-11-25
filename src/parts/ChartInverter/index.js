@@ -9,7 +9,7 @@ import * as op_service from "@helpers/api/outproject";
 let tempOP = [];
 var tempInterval = null;
 var tempTimeout = null;
-var count = 0;
+var countSync = 0;
 var stateSyncTmp = null;
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -94,14 +94,13 @@ const ChartInverter = ({ InverterProjectName }) => {
   useEffect(() => {
     stateSyncTmp = stateSync(
       (isTotalData, isPage, isTotalRecord, isCurrentData) => {
-        if (count == 0) {
+        if (countSync == 0) {
           if (
             isTotalData &&
             isTotalData != undefined &&
             isPage &&
             isPage != undefined
           ) {
-            console.log("isTotalData is ", isTotalData);
             let current_data,
               total_data = totalData ? totalData : isTotalData,
               cur_page = page ? page : isPage;
@@ -115,23 +114,13 @@ const ChartInverter = ({ InverterProjectName }) => {
             } else {
               current_data = total_data;
             }
-            count = 1;
+            // countSync = 1;
             setCurrentData(current_data);
           }
         }
-        // if (isPage &&isPage != undefined) {
-        //   console.log("isPage is ", isPage);
-        // }
-        // if (isTotalRecord && isTotalRecord != undefined) {
-        //   console.log("isTotalRecord is ", isTotalRecord);
-        // }
-        // if (isCurrentData && isCurrentData != undefined) {
-        //   console.log("isCurrentData is ", isCurrentData);
-        // }
       }
     );
     let pages;
-    console.log("init route Inverter", router);
     if (!router.query.page && !router.asPath.match("page=")) {
       handleChange("", 1);
     } else {
@@ -143,6 +132,8 @@ const ChartInverter = ({ InverterProjectName }) => {
     initTime().then((init_time) => {
       setTimeInterval(init_time);
       loadData().then((value) => {
+        console.log("loadData Then ", value);
+        console.log("pages ", pages);
         if (pages != undefined) {
           setPage(pages);
         }
@@ -169,7 +160,6 @@ const ChartInverter = ({ InverterProjectName }) => {
   }, [totalRecord]);
 
   useEffect(() => {
-    console.log("CHANGE PAGE ", page);
     if ((page && page != undefined) || page != NaN) {
       stateSyncTmp.setIsPage(page);
     }
