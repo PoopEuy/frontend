@@ -1,4 +1,3 @@
-import Axios from "axios";
 import { apt1GetNojs, apt1PutNojs, apt1PostNojs } from "@helpers/api/apt1";
 
 export const apt1NojsType = {
