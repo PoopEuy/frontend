@@ -1,22 +1,12 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import Link from "next/link";
 
 import EditIcon from "@material-ui/icons/Edit"; //material ui icons
 import AddIcon from "@material-ui/icons/Add";
 
-//redux
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-
 //components OR parts local
 import TableComponent from "@components/TableComponent";
-import { setTableNojs } from "@redux/dataTable/action";
-import {
-  getApt1Nojs,
-  editApt1Nojs,
-  addApt1Nojs,
-} from "@redux/apt1/nojs/action";
+
 import jsonToTable from "@helpers/jsonToTable";
 import FormNojs from "@parts/FormNojs";
 import OpenDialog from "@components/OpenDialog";
@@ -25,12 +15,11 @@ import TooltipComponent from "@components/TooltipComponent";
 import Swal from "sweetalert2"; //sweetalert2
 
 const TableNojs = ({
-  getApt1Nojs,
-  editApt1Nojs,
-  addApt1Nojs,
+  getAptNojs,
+  editAptNojs,
+  addAptNojs,
   dataNojs,
   errorNojs,
-  setTableNojs,
   titleTable,
 }) => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -75,11 +64,11 @@ const TableNojs = ({
     );
   };
 
-  const submit = (data) => {
-    records ? editApt1Nojs(data.nojs, data) : addApt1Nojs(data);
-    getApt1Nojs();
+  const submit = async (data) => {
+    records ? await editAptNojs(data.nojs, data) : await addAptNojs(data);
     Swal.fire("success!", "Data has been saved!", "success");
     setOpenDialog(false);
+    getAptNojs();
   };
 
   useEffect(() => {
@@ -138,17 +127,8 @@ const TableNojs = ({
   );
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setTableNojs: bindActionCreators(setTableNojs, dispatch),
-    editApt1Nojs: bindActionCreators(editApt1Nojs, dispatch),
-    addApt1Nojs: bindActionCreators(addApt1Nojs, dispatch),
-    getApt1Nojs: bindActionCreators(getApt1Nojs, dispatch),
-  };
-};
-
 TableNojs.propTypes = {
   titleTable: PropTypes.string.isRequired,
 };
 
-export default connect(null, mapDispatchToProps)(TableNojs);
+export default TableNojs;
