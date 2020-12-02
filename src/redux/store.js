@@ -3,6 +3,8 @@ import { HYDRATE, createWrapper } from "next-redux-wrapper";
 import thunkMiddleware from "redux-thunk";
 import DataTable from "@redux/dataTable/reducer";
 import DataApt1Nojs from "@redux/apt1/nojs/reducer";
+import DataApt2Nojs from "@redux/apt2/nojs/reducer";
+// import DataApt1Logger from "@redux/apt1/logger/reducer";
 import Clock from "@redux/clock/reducer";
 
 const bindMiddleware = (middleware) => {
@@ -16,16 +18,18 @@ const bindMiddleware = (middleware) => {
 const combinedReducer = combineReducers({
   DataTable,
   DataApt1Nojs,
+  DataApt2Nojs,
+  // DataApt1Logger,
   Clock,
 });
 
 const reducer = (state, action) => {
   if (action.type === HYDRATE) {
     const nextState = {
-      ...state, // use previous state
-      ...action.payload, // apply delta from hydration
+      ...state,
+      ...action.payload,
     };
-    if (state.count) nextState.count = state.count; // preserve count value on client side navigation
+    if (state.count) nextState.count = state.count;
     return nextState;
   } else {
     return combinedReducer(state, action);
