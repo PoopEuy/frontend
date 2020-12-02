@@ -124,7 +124,6 @@ const NocComponent = ({ data }) => {
       });
     }
   }, [data]);
-  console.log(state);
   return (
     <>
       {dataNoc && (
