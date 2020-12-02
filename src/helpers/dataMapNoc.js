@@ -146,6 +146,5 @@ export const dataMapNoc = (data) => {
     color_edl2: colorEdl2.reverse(),
     labels: labels,
   };
-  console.log(chart);
   return chart;
 };
