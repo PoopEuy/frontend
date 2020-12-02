@@ -5,12 +5,12 @@ export const tableActionTypes = {
   TABLE_NOJS: "TABLE_NOJS",
 };
 
-export const setTableNojs = (data, title) => (dispatch) => {
+export const setTableNojs = (data, title, error = false) => (dispatch) => {
   dispatch({
     type: tableActionTypes.TABLE_NOJS,
     payload: {
       data: data,
-      error: false,
+      error: error,
       title: title,
     },
   });
