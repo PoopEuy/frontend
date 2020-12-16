@@ -10,7 +10,7 @@ const OutProjectInverter = () => {
   const [projectName, setProjectName] = useState();
 
   useEffect(() => {
-    console.log("ROUTER inverter ", router);
+    // console.log("ROUTER inverter ", router);
     let project_name;
     if (!router.query.project_name && !router.asPath.match("project_name=")) {
       router.push(`/outproject`);
