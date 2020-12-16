@@ -132,8 +132,8 @@ const ChartInverter = ({ InverterProjectName }) => {
     initTime().then((init_time) => {
       setTimeInterval(init_time);
       loadData().then((value) => {
-        console.log("loadData Then ", value);
-        console.log("pages ", pages);
+        // console.log("loadData Then ", value);
+        // console.log("pages ", pages);
         if (pages != undefined) {
           setPage(pages);
         }
@@ -198,15 +198,22 @@ const ChartInverter = ({ InverterProjectName }) => {
       console.log(`Time to start live : ${timeInterval}s`);
       clearTimeout(tempTimeout);
       clearInterval(tempInterval);
-      getData(currentData);
-      let timeout = setTimeout(() => {
-        getData(currentData, true);
-        let interval = setInterval(() => {
-          getData(currentData, true);
-        }, intrvl);
-        setIntervalData(interval);
-      }, timeInterval * 1000);
-      setTimeoutData(timeout);
+      loadData(true).then((value) => {
+        getData(value);
+        let timeout = setTimeout(() => {
+          loadData(true).then((timeout_value) => {
+            getData(timeout_value, true);
+            let interval = setInterval(() => {
+              loadData(true).then((interval_value) => {
+                getData(interval_value, true);
+              });
+            }, intrvl);
+            setIntervalData(interval);
+          });
+        }, timeInterval * 1000);
+        setTimeoutData(timeout);
+      });
+      
     }
   }, [currentData]);
 
@@ -256,16 +263,18 @@ const ChartInverter = ({ InverterProjectName }) => {
     }
   };
 
-  const loadData = async () => {
+  const loadData = async (live = false) => {
     return new Promise((resolve) => {
-      console.log("INVERTERPROJECTNAME ", InverterProjectName);
+      // console.log("INVERTERPROJECTNAME ", InverterProjectName);
       if (InverterProjectName) {
         op_service
           .opGetInverter(InverterProjectName)
           .then(async (res) => {
             console.log("DATA ", res);
-            setTotalRecord(res.data.length);
-            setTotalData(res.data);
+            if (!live) {
+              setTotalRecord(res.data.length);
+              setTotalData(res.data);
+            }
             resolve(res.data);
           })
           .catch((err) => {

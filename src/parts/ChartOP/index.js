@@ -170,15 +170,21 @@ const ChartOP = ({ getApi }) => {
     if (timeInterval && currentData) {
       clearTimeout(tempTimeout);
       clearInterval(tempInterval);
-      getData(currentData);
-      let timeout = setTimeout(() => {
-        getData(currentData, true);
-        let interval = setInterval(() => {
-          getData(currentData, true);
-        }, intrvl);
-        setIntervalData(interval);
-      }, timeInterval * 1000);
-      setTimeoutData(timeout);
+      loadData(true).then((value) => {
+        getData(value);
+        let timeout = setTimeout(() => {
+          loadData(true).then((timeout_value) => {
+            getData(timeout_value, true);
+            let interval = setInterval(() => {
+              loadData(true).then((interval_value) => {
+                getData(interval_value, true);
+              });
+            }, intrvl);
+            setIntervalData(interval);
+          });
+        }, timeInterval * 1000);
+        setTimeoutData(timeout);
+      });
     }
   }, [currentData]);
 
@@ -223,12 +229,14 @@ const ChartOP = ({ getApi }) => {
     }
   };
 
-  const loadData = async () => {
+  const loadData = async (live = false) => {
     return new Promise((resolve, reject) => {
       getApi()
         .then((res) => {
-          setTotalRecord(res.data.length);
-          setTotalData(res.data);
+          if (!live) {
+            setTotalRecord(res.data.length);
+            setTotalData(res.data);
+          }
           resolve(res.data);
         })
         .catch((err) => {
