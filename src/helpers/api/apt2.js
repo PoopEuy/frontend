@@ -44,3 +44,24 @@ export const apt2PostNojs = async (data) => {
 
   return result;
 };
+
+export const apt2GetLogger = async (param) => {
+  const result = await instanceApt2
+    .get(`/api/logger`, {
+      params: param,
+    })
+    .then((res) => {
+      return {
+        data: res.data,
+        error: false,
+      };
+    })
+    .catch((error) => {
+      return {
+        error: true,
+        message: error.message,
+      };
+    });
+
+  return result;
+};
