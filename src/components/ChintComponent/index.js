@@ -115,7 +115,7 @@ const ChintComponent = ({ data }) => {
     if (data) {
       setdataChint(data);
     }
-    console.log(`Build data Chint ${data.project_name}`, data);
+    console.log(`Build data Chint ${data.serial_number}`, data);
   }, [data]);
   return (
     <>
@@ -130,7 +130,7 @@ const ChintComponent = ({ data }) => {
           </Grid> */}
           <Tooltip
             title={
-              <span style={{ fontSize: 30 }}>{dataChint.project_name}</span>
+              <span style={{ fontSize: 30 }}>{dataChint.serial_number}</span>
             }
             leaveDelay={800}
           >

@@ -30,7 +30,6 @@ const getMaxOP = async (data) => {
 const getMaxChint = async (data) => {
   let promise = new Promise((resolve, reject) => {
     if (data && data.length) {
-      console.log("IF");
       let energy_a = { max_avg: 0, length: 0 };
       let energy_b = { max_avg: 0, length: 0 };
       let energy_c = { max_avg: 0, length: 0 };
@@ -56,7 +55,6 @@ const getMaxChint = async (data) => {
         energy_c: energy_c.max_avg,
       });
     } else {
-      console.log("Else");
       resolve({ energy_a: 0, energy_b: 0, energy_c: 0 });
     }
   });
@@ -190,7 +188,6 @@ export const dataMapOP = async (res, project_name, node_id) => {
           color_enjoy: color_enjoy,
           labels: labels,
         };
-        console.log("chart ", chart);
         resolve(chart);
       } else {
         for (let i = 1; i <= 36; i++) {
@@ -212,7 +209,6 @@ export const dataMapOP = async (res, project_name, node_id) => {
           labels: labels,
         };
         resolve(chart);
-        console.log("chart ", chart);
       }
     });
   });
@@ -238,9 +234,8 @@ export const dataMapChint = async (res, serial_number) => {
     const red = "rgba(230, 0, 0, 1)";
     const black = "rgba(0, 0, 0, 1)";
 
-    console.log(`${serial_number} is `, res);
+    // console.log(`${serial_number} is `, res);
     await getMaxChint(res).then((val) => {
-      console.log("max Chint ", val);
       max_average = {
         energy_a: val.energy_a,
         energy_b: val.energy_b,
@@ -400,7 +395,7 @@ export const dataMapInverter = async (res, serial_number) => {
     const red = "rgba(230, 0, 0, 1)";
     const black = "rgba(0, 0, 0, 1)";
 
-    console.log(`${serial_number} is `, res);
+    // console.log(`${serial_number} is `, res);
     await getMaxInverter(res).then((val) => {
       max_average = {
         energy_a: val.energy_a,
