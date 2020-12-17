@@ -3,10 +3,9 @@ import axios from "axios";
 const baseURLApt1 = process.env.NEXT_PUBLIC_BASE_URL_APT1;
 const baseURLApt2 = process.env.NEXT_PUBLIC_BASE_URL_APT2;
 const baseURLOutProject = process.env.NEXT_PUBLIC_BASE_URL_OP;
-const accessToken =
-  "860Y2paeQbjXa0hQo2sV2JVwftxAKZLpDGZUxEpFTk9kvcyYYTvQSMo1R4yL4qN2GV4DJ6K5WjgrSmAP";
+const accessToken = process.env.NEXT_PUBLIC_TOKEN_APT1;
 
-const OPToken = "705b7cf8e5d5957f7b5a91223b78b915292d3e50";
+const OPToken = process.env.NEXT_PUBLIC_TOKEN_OP;
 
 export const instanceApt1 = axios.create({
   baseURL: baseURLApt1,
