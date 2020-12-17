@@ -6,7 +6,6 @@ import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import { Bar } from "react-chartjs-2";
 import clsx from "clsx";
-import TooltipComponent from "@components/TooltipComponent";
 import { Tooltip } from "@material-ui/core";
 
 const useStyle = makeStyles((theme) => ({
@@ -107,7 +106,7 @@ const option = (min, max) => {
   };
 };
 
-const NocComponent = ({ data }) => {
+const NocApt2Component = ({ data }) => {
   const classes = useStyle();
   const [dataNoc, setDataNoc] = useState(false);
   const [state, setState] = useState({
@@ -145,7 +144,7 @@ const NocComponent = ({ data }) => {
                     style={{ marginRight: 10, marginLeft: 10 }}
                     className={clsx({
                       [classes.bgGreen]: state.pms > 15,
-                      [classes.bgYellow]: state.pms <= 15 && state.pms > 13,
+                      [classes.bgYellow]: state.pms <= 15 && state.pms >= 13,
                       [classes.bgRed]: state.pms < 12,
                     })}
                   >
@@ -187,12 +186,23 @@ const NocComponent = ({ data }) => {
             />
           </Box>
 
+          <Box className={classes.chartEh}>
+            <Bar
+              data={dataToDataChart({
+                labels: dataNoc.data.labels,
+                data: dataNoc.data.eh3,
+                color: dataNoc.data.color_eh3,
+              })}
+              options={option(0, 55)}
+            />
+          </Box>
+
           <Box className={classes.chartBv}>
             <Bar
               data={dataToDataChart({
                 labels: dataNoc.data.labels,
-                data: dataNoc.data.batt_volt1,
-                color: dataNoc.data.color_batt_volt1,
+                data: dataNoc.data.batt_volt,
+                color: dataNoc.data.color_batt_volt,
               })}
               options={option(0, 30)}
             />
@@ -224,8 +234,8 @@ const NocComponent = ({ data }) => {
   );
 };
 
-NocComponent.propTypes = {
+NocApt2Component.propTypes = {
   data: PropTypes.object,
 };
 
-export default NocComponent;
+export default NocApt2Component;

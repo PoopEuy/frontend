@@ -11,8 +11,11 @@ import { connect } from "react-redux";
 
 //components OR parts local
 import { getApt1Nojs } from "@redux/apt1/nojs/action";
+import { getApt2Nojs } from "@redux/apt2/nojs/action";
+// import { WsLogger, WsConnect } from "@redux/apt1/logger/action";
 import DrawerHeader from "@parts/DrawerHeader";
 import Apt1 from "@components/ListPages/apt1";
+import Apt2 from "@components/ListPages/apt2";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
@@ -39,6 +42,7 @@ const listPages = () => {
   return (
     <>
       <Apt1 />
+      <Apt2 />
       <Link
         href={{
           pathname: "/outproject",
@@ -50,15 +54,17 @@ const listPages = () => {
   );
 };
 
-const Layout = ({ children, getApt1Nojs }) => {
+const Layout = ({ children, getApt1Nojs, getApt2Nojs }) => {
   const router = useRouter().pathname;
 
   useEffect(() => {
     getApt1Nojs();
+    getApt2Nojs();
+    // WsConnect();
+    // WsLogger();
   }, []);
 
   const page = listPages();
-  // console.log("Layout");
 
   return (
     <>
@@ -74,6 +80,9 @@ const Layout = ({ children, getApt1Nojs }) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getApt1Nojs: bindActionCreators(getApt1Nojs, dispatch),
+    getApt2Nojs: bindActionCreators(getApt2Nojs, dispatch),
+    // WsLogger: bindActionCreators(WsLogger, dispatch),
+    // WsConnect: bindActionCreators(WsConnect, dispatch),
   };
 };
 
