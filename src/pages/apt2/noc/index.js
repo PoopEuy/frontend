@@ -1,8 +1,8 @@
 import ChartNoc from "@parts/ChartNoc/apt2";
-import { apt1GetLogger } from "@helpers/api/apt1";
+import { apt2GetLogger } from "@helpers/api/apt2";
 
 const Apt2Noc = () => {
-  return <ChartNoc getApi={apt1GetLogger} />;
+  return <ChartNoc getApi={apt2GetLogger} />;
 };
 
 export default Apt2Noc;
