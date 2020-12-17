@@ -105,7 +105,9 @@ const ChartOP = ({ getApi }) => {
       setTimeInterval(init_time);
       loadData().then((value) => {
         setTotalData(value);
-        setPage(pages);
+        if (pages != undefined) {
+          setPage(pages);
+        }
       });
     });
     return () => {
@@ -206,13 +208,13 @@ const ChartOP = ({ getApi }) => {
       setLoading({ load: true, data: false });
     }
     if (value) {
-      value.forEach((project_name, index) => {
-        if (project_name) {
-          op_service.opGetLiveData(project_name).then(async (res) => {
-            dataMapOP(res.data, project_name, res.node_id).then((val) => {
+      for (let index = 0; index< value.length; index++) {
+        if (value[index]) {
+          op_service.opGetLiveData(value[index]).then(async (res) => {
+            dataMapOP(res.data, value[index], res.node_id).then((val) => {
               tempOP.push(val);
 
-              if (index + 1 == value.length) {
+              if (tempOP.length == value.length) {
                 if (live) {
                   setDataOP(false);
                 } else {
@@ -223,7 +225,7 @@ const ChartOP = ({ getApi }) => {
             });
           });
         }
-      });
+      }
     } else {
       setLoading({ load: false, data: false });
     }
