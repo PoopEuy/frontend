@@ -9,7 +9,6 @@ const OutProjectChint = () => {
   const [projectName, setProjectName] = useState();
 
   useEffect(() => {
-    console.log("ROUTER chint ", router);
     let project_name;
     if (!router.query.project_name && !router.asPath.match("project_name=")) {
       router.push(`/outproject`);

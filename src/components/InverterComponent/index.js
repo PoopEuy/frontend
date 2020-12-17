@@ -116,7 +116,9 @@ const InverterComponent = ({ data }) => {
     if (data) {
       setdataInverter(data);
     }
-    console.log(`Build data Inverter ${data.project_name}`, data);
+    if (data.serial_number == "501501049640K1100023") {
+      console.log(`Build data Inverter ${data.serial_number}`, data);
+    }
   }, [data]);
   return (
     <>
@@ -131,7 +133,7 @@ const InverterComponent = ({ data }) => {
           </Grid> */}
           <Tooltip
             title={
-              <span style={{ fontSize: 30 }}>{dataInverter.project_name}</span>
+              <span style={{ fontSize: 24 }}>{dataInverter.serial_number}</span>
             }
             leaveDelay={800}
           >

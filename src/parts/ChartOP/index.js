@@ -93,24 +93,17 @@ const ChartOP = ({ getApi }) => {
 
   useEffect(() => {
     let pages;
-    console.log("init route", router);
     if (!router.query.page && !router.asPath.match("page")) {
-      console.log("if");
       handleChange("", 1);
     } else {
-      console.log("else");
       pages = parseInt(router.query.page);
       if (router.asPath.match("page")) {
         pages = parseInt(router.asPath.split("=")[1]);
       }
     }
-    console.log("pass 1");
     initTime().then((init_time) => {
-      console.log("pass 2");
       setTimeInterval(init_time);
       loadData().then((value) => {
-        console.log("pass 3", value);
-        console.log("pass 3", pages);
         setTotalData(value);
         setPage(pages);
       });
@@ -136,9 +129,6 @@ const ChartOP = ({ getApi }) => {
   }, [totalRecord]);
 
   useEffect(() => {
-    console.log("totalData ", totalData);
-    console.log("page ", page);
-    console.log("PAGES ", totalPage);
     if (page > totalPage && totalPage != 0) {
       router.push(`/outproject?page=${totalPage}`);
       setPage(totalPage);
@@ -146,7 +136,6 @@ const ChartOP = ({ getApi }) => {
       if (totalData) {
         initTime().then((init_time) => {
           setTimeInterval(init_time);
-          console.log("pass 4", totalData);
           let current_data,
             total_data = totalData,
             pages = page;
@@ -163,7 +152,6 @@ const ChartOP = ({ getApi }) => {
           } else {
             current_data = total_data;
           }
-          console.log("pass 5 ", current_data);
           setCurrentData(current_data);
         });
       }
@@ -171,8 +159,6 @@ const ChartOP = ({ getApi }) => {
   }, [page]);
 
   useEffect(() => {
-    console.log("totalData change ", totalData);
-    console.log("totalData change ", page);
     if (totalData && page) {
       setPage(page);
     }
@@ -182,19 +168,23 @@ const ChartOP = ({ getApi }) => {
     let intrvl = 300000;
     // let intrvl = 60000;
     if (timeInterval && currentData) {
-      console.log(`Time to start live : ${timeInterval}s`);
-      // console.log("tempInterval ", intervalData);
       clearTimeout(tempTimeout);
       clearInterval(tempInterval);
-      getData(currentData);
-      let timeout = setTimeout(() => {
-        getData(currentData, true);
-        let interval = setInterval(() => {
-          getData(currentData, true);
-        }, intrvl);
-        setIntervalData(interval);
-      }, timeInterval * 1000);
-      setTimeoutData(timeout);
+      loadData(true).then((value) => {
+        getData(value);
+        let timeout = setTimeout(() => {
+          loadData(true).then((timeout_value) => {
+            getData(timeout_value, true);
+            let interval = setInterval(() => {
+              loadData(true).then((interval_value) => {
+                getData(interval_value, true);
+              });
+            }, intrvl);
+            setIntervalData(interval);
+          });
+        }, timeInterval * 1000);
+        setTimeoutData(timeout);
+      });
     }
   }, [currentData]);
 
@@ -211,14 +201,12 @@ const ChartOP = ({ getApi }) => {
   }, [intervalData]);
 
   const getData = async (value, live = false) => {
-    console.log(`getData live: ${live}`, value);
     tempOP = [];
     if (!live) {
       setLoading({ load: true, data: false });
     }
     if (value) {
       value.forEach((project_name, index) => {
-        // console.log(`index ke ${index}`, project_name);
         if (project_name) {
           op_service.opGetLiveData(project_name).then(async (res) => {
             dataMapOP(res.data, project_name, res.node_id).then((val) => {
@@ -241,12 +229,14 @@ const ChartOP = ({ getApi }) => {
     }
   };
 
-  const loadData = async () => {
+  const loadData = async (live = false) => {
     return new Promise((resolve, reject) => {
       getApi()
         .then((res) => {
-          setTotalRecord(res.data.length);
-          setTotalData(res.data);
+          if (!live) {
+            setTotalRecord(res.data.length);
+            setTotalData(res.data);
+          }
           resolve(res.data);
         })
         .catch((err) => {

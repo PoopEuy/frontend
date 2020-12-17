@@ -93,7 +93,6 @@ const ChartChint = ({ ChintProjectName }) => {
 
   useEffect(() => {
     let pages;
-    console.log("init route Chint", router);
     if (!router.query.page && !router.asPath.match("page=")) {
       handleChange("", 1);
     } else {
@@ -158,15 +157,21 @@ const ChartChint = ({ ChintProjectName }) => {
       // console.log("tempInterval ", intervalData);
       clearTimeout(tempTimeout);
       clearInterval(tempInterval);
-      getData(currentData);
-      let timeout = setTimeout(() => {
-        getData(currentData, true);
-        let interval = setInterval(() => {
-          getData(currentData, true);
-        }, intrvl);
-        setIntervalData(interval);
-      }, timeInterval * 1000);
-      setTimeoutData(timeout);
+      loadData(true).then((value) => {
+        getData(value);
+        let timeout = setTimeout(() => {
+          loadData(true).then((timeout_value) => {
+            getData(timeout_value, true);
+            let interval = setInterval(() => {
+              loadData(true).then((interval_value) => {
+                getData(interval_value, true);
+              });
+            }, intrvl);
+            setIntervalData(interval);
+          });
+        }, timeInterval * 1000);
+        setTimeoutData(timeout);
+      });
     }
   }, [currentData]);
 
@@ -228,16 +233,18 @@ const ChartChint = ({ ChintProjectName }) => {
     }
   };
 
-  const loadData = async () => {
+  const loadData = async (live = false) => {
     return new Promise((resolve) => {
-      console.log("CHINTPROJECTNAME ", ChintProjectName);
+      // console.log("CHINTPROJECTNAME ", ChintProjectName);
       if (ChintProjectName) {
         op_service
           .opGetChint(ChintProjectName)
           .then(async (res) => {
             console.log("DATA ", res);
-            setTotalRecord(res.data.length);
-            setTotalData(res.data);
+            if (!live) {
+              setTotalRecord(res.data.length);
+              setTotalData(res.data);
+            }
             resolve(res.data);
           })
           .catch((err) => {
@@ -246,19 +253,6 @@ const ChartChint = ({ ChintProjectName }) => {
           });
       }
     });
-    // return new Promise((resolve, reject) => {
-    //   ChintProjectName()
-    //     .then((res) => {
-    //         console.log("RES ChintProjectName ", res);
-    //       setTotalRecord(res.data.length);
-    //       setTotalData(res.data);
-    //       resolve(res.data);
-    //     })
-    //     .catch((err) => {
-    //       console.log("err", err);
-    //       reject();
-    //     });
-    // });
   };
 
   const initTime = async () => {
