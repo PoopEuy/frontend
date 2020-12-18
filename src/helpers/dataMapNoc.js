@@ -1,10 +1,4 @@
-function dataMap(value, fromLow, fromHigh, toLow, toHigh) {
-  let fromSpan = fromHigh - fromLow;
-  let toSpan = toHigh - toLow;
-
-  let valueScaled = (value - fromLow) / fromSpan;
-  return toLow + valueScaled * toSpan;
-}
+import dataMap from "./datamap";
 
 export const dataMapNoc = (data) => {
   let mxEh = 400;
@@ -58,8 +52,8 @@ export const dataMapNoc = (data) => {
       batt_volt1.push(100);
       colorBattVolt1.push(black);
     } else {
-      hbv = Math.round(dataMap(data.batt_volt1, 45, 55, 0, 20));
-      if (hbv > 20) hbv = 20;
+      hbv = Math.round(dataMap(data.batt_volt1, 45, 55, 0, 30));
+      if (hbv > 30) hbv = 30;
       batt_volt1.push(hbv);
       colorBattVolt1.push(blue);
     }
@@ -92,40 +86,22 @@ export const dataMapNoc = (data) => {
   });
 
   if (data.length < 36) {
-    if (data.length == 0) {
-      for (let i = 0; i < 36 - data.length; i++) {
-        time_local.push(100);
-        eh1.push(100);
-        eh2.push(100);
-        batt_volt1.push(100);
-        edl1.push(100 * -1);
-        edl2.push(100 * -1);
-        labels.push(i);
-        pms.push(null);
-        bv.push(null);
-        pms_state.push(null);
-        colorEh1.push(black);
-        colorEh2.push(black);
-        colorBattVolt1.push(black);
-        colorEdl1.push(black);
-        colorEdl2.push(black);
-      }
-    } else {
-      time_local.push(100);
-      eh1.push(100);
-      eh2.push(100);
-      batt_volt1.push(100);
-      edl1.push(100 * -1);
-      edl2.push(100 * -1);
-      pms_state.push(100);
-      labels.push(36);
-      pms.push(100);
-      bv.push(null);
-      colorEh1.push(black);
-      colorEh2.push(black);
-      colorBattVolt1.push(black);
-      colorEdl1.push(black);
-      colorEdl2.push(black);
+    for (let i = 0; i < 36 - data.length; i++) {
+      time_local.unshift(100);
+      eh1.unshift(100);
+      eh2.unshift(100);
+      batt_volt1.unshift(100);
+      edl1.unshift(100 * -1);
+      edl2.unshift(100 * -1);
+      labels.unshift(i);
+      pms.unshift(null);
+      bv.unshift(null);
+      pms_state.unshift(null);
+      colorEh1.unshift(black);
+      colorEh2.unshift(black);
+      colorBattVolt1.unshift(black);
+      colorEdl1.unshift(black);
+      colorEdl2.unshift(black);
     }
   }
 
