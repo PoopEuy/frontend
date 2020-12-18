@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import Infinity from "../../../public/images/Infinity-loading.svg";
 import * as op_service from "@helpers/api/outproject";
 import { FullscreenExit } from "@material-ui/icons";
+import disconnect from "../../../public/images/unplugged.png";
 
 let tempOP = [];
 var tempInterval = null;
@@ -66,6 +67,20 @@ const useStyles = makeStyles((theme) => ({
     height: 85,
     backgroundColor: "#c1c1c1",
   },
+  connection_problem: {
+    height: 500,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: 24,
+    fontWeight: 600,
+    textTransform: "uppercase",
+    flexDirection: "column",
+  },
+  connection_problem_img: {
+    width: 100,
+    marginBottom: 30,
+  }
 }));
 
 const ChartOP = ({ getApi }) => {
@@ -288,7 +303,10 @@ const ChartOP = ({ getApi }) => {
           </Grid>
 
           {!loading.load && !loading.data && (
-            <div className={classes.loading}>Koneksi bermasalah</div>
+            <div className={classes.connection_problem}>
+              <img className={classes.connection_problem_img} src={disconnect} alt="Disconnect" />
+              <div>Koneksi bermasalah</div>
+            </div>
           )}
 
           {loading.load && (
