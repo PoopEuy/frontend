@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 const ChartNoc = ({ dataApt2Nojs, getApi }) => {
   const router = useRouter();
   const classes = useStyles();
-  const itemsPerPage = 3;
+  const itemsPerPage = 15;
   const [page, setPage] = useState(0);
   const [noOfPages, setNoOfPages] = useState(0);
   const [loading, setLoading] = useState({ load: false, data: false });
@@ -84,25 +84,29 @@ const ChartNoc = ({ dataApt2Nojs, getApi }) => {
       const logger = getApi({ nojs: nojs.id, single: true });
       logger.then((e) => {
         const response = e.data;
-        console.log(response);
         const responseData = response && response.data[0];
         const temp = response && tempData.find((e) => e.nojs == response.nojs);
+        console.log("temp", temp.data);
         if (response.total != 0) {
-          const compere = temp.data[0].ts != responseData.ts;
-          if (compere) {
-            temp.data.pop();
-            temp.data.unshift(responseData);
-            tempNoc = [
-              ...tempNoc,
-              { nojs: nojs, data: dataMapApt2(temp.data) },
-            ];
+          if (temp.data.length != 0) {
+            const compere = temp.data[0].ts != responseData.ts;
+            if (compere) {
+              temp.data.pop();
+              temp.data.unshift(responseData);
+              tempNoc = [
+                ...tempNoc,
+                { nojs: nojs, data: dataMapApt2(temp.data) },
+              ];
+            } else {
+              tempNoc = [
+                ...tempNoc,
+                { nojs: nojs, data: dataMapApt2(temp.data) },
+              ];
+            }
+            setDataNoc(tempNoc);
           } else {
-            tempNoc = [
-              ...tempNoc,
-              { nojs: nojs, data: dataMapApt2(temp.data) },
-            ];
+            temp.data.push(responseData);
           }
-          setDataNoc(tempNoc);
         }
       });
     });

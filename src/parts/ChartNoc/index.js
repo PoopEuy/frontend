@@ -4,11 +4,11 @@ import Pagination from "@material-ui/lab/Pagination";
 import NocComponent from "@components/NocComponent";
 import { dataMapNoc } from "@helpers/dataMapNoc";
 import { connect } from "react-redux";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import LoadingChart from "@components/LoadingChart";
 import { useRouter } from "next/router";
-import Infinity from "../../../public/images/Infinity-loading.svg";
+import { initTime } from "@helpers/intitTime";
 
-let tempNoc = [];
+let tempData = [];
 let status = 0;
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,9 +37,19 @@ const ChartNoc = ({ dataApt1Nojs, getApi }) => {
   const [noOfPages, setNoOfPages] = useState(0);
   const [loading, setLoading] = useState({ load: false, data: false });
   const [dataNoc, setDataNoc] = useState(false);
+  const [time, setTime] = useState({
+    interval: null,
+    timeOut: null,
+  });
+  const [timeInterval, setTimeInterval] = useState(null);
+  const [pageNojs, setPageNojs] = useState(null);
 
   const handleChange = (event, value) => {
-    if (value !== page) {
+    if (value != page) {
+      clearTimeout(time.timeOut);
+      clearInterval(time.interval);
+      tempData = [];
+      let tempNoc = [];
       router.push(`/apt1/noc?page=${value}`);
       setLoading({ load: true, data: false });
       setPage(value);
@@ -47,32 +57,51 @@ const ChartNoc = ({ dataApt1Nojs, getApi }) => {
         (value - 1) * itemsPerPage,
         value * itemsPerPage
       );
+      setPageNojs(temp);
       temp.forEach((nojs) => {
         status++;
         const logger = getApi({
           nojs: nojs.nojs,
           noc: true,
         });
-
         logger.then((e) => {
-          let temp = tempNoc.find((tempNoc) => tempNoc.nojs.nojs === nojs.nojs);
-          if (temp) {
-            // JSON.stringify(temp) === JSON.stringify(dataMapNoc(e.data))
-            //   ?
-            // : console.log(false);
-            setLoading({ load: false, data: true });
-          } else {
-            console.log("temp false");
-            tempNoc = [...tempNoc, { nojs: nojs, data: dataMapNoc(e.data) }];
-          }
+          console.log("response", e);
+          tempData = [...tempData, { nojs: nojs.nojs, data: e.data }];
+          tempNoc = [...tempNoc, { nojs: nojs, data: dataMapNoc(e.data) }];
           status--;
           status == 0 && setLoading({ load: false, data: true });
-
+          status == 0 && setTimeInterval(initTime());
           setDataNoc(tempNoc);
         });
       });
+      status == 0 && setLoading({ load: false, data: false });
     }
-    status === 0 && setLoading({ load: false, data: false });
+  };
+
+  const liveData = () => {
+    let tempNoc = [];
+    pageNojs.forEach((nojs) => {
+      const logger = getApi({ nojs: nojs.nojs, noc: "true", single: "true" });
+      logger.then((e) => {
+        console.log({ e });
+        const response = e.data;
+        const temp = response && tempData.find((e) => e.nojs == nojs.nojs);
+        if (temp.data.length != 0) {
+          const compere = temp.data[0].time_local != response[0].time_local;
+          if (compere) {
+            console.log(response[0]);
+            temp.data.pop();
+            temp.data.unshift(response[0]);
+            tempNoc = [...tempNoc, { nojs: nojs, data: dataMapNoc(temp.data) }];
+          } else {
+            tempNoc = [...tempNoc, { nojs: nojs, data: dataMapNoc(temp.data) }];
+          }
+          setDataNoc(tempNoc);
+        } else {
+          temp.data.push(response);
+        }
+      });
+    });
   };
 
   useEffect(() => {
@@ -82,6 +111,27 @@ const ChartNoc = ({ dataApt1Nojs, getApi }) => {
       handleChange("", parseInt(tempPage));
     }
   }, [dataApt1Nojs]);
+
+  useEffect(() => {
+    const intrvl = 300000;
+    console.log(`time to Live ${timeInterval}`);
+    if (timeInterval) {
+      let timeout = setTimeout(() => {
+        liveData();
+        console.log("tim out");
+        let interval = setInterval(() => {
+          liveData();
+          console.log("tim interval");
+        }, intrvl);
+        setTime({ ...time, interval: interval });
+      }, timeInterval * 1000);
+      setTime({ ...time, timeOut: timeout });
+    }
+    return () => {
+      clearTimeout(time.timeOut);
+      clearInterval(time.interval);
+    };
+  }, [timeInterval]);
 
   return (
     <>
@@ -107,11 +157,7 @@ const ChartNoc = ({ dataApt1Nojs, getApi }) => {
                 })}
           </Grid>
 
-          {loading.load && (
-            <div className={classes.loading}>
-              <img src={Infinity} alt="tes" />
-            </div>
-          )}
+          {loading.load && <LoadingChart />}
 
           <Divider />
           <Box component="span">
