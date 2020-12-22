@@ -36,3 +36,5 @@ yarn-error.log*
 
 # test file
 test.js
+
+.vscode
