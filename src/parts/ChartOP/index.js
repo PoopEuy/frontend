@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import Infinity from "../../../public/images/Infinity-loading.svg";
 import * as op_service from "@helpers/api/outproject";
 import { FullscreenExit } from "@material-ui/icons";
+import disconnect from "../../../public/images/unplugged.png";
 
 let tempOP = [];
 var tempInterval = null;
@@ -66,6 +67,20 @@ const useStyles = makeStyles((theme) => ({
     height: 85,
     backgroundColor: "#c1c1c1",
   },
+  connection_problem: {
+    height: 500,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: 24,
+    fontWeight: 600,
+    textTransform: "uppercase",
+    flexDirection: "column",
+  },
+  connection_problem_img: {
+    width: 100,
+    marginBottom: 30,
+  }
 }));
 
 const ChartOP = ({ getApi }) => {
@@ -105,7 +120,9 @@ const ChartOP = ({ getApi }) => {
       setTimeInterval(init_time);
       loadData().then((value) => {
         setTotalData(value);
-        setPage(pages);
+        if (pages != undefined) {
+          setPage(pages);
+        }
       });
     });
     return () => {
@@ -206,13 +223,13 @@ const ChartOP = ({ getApi }) => {
       setLoading({ load: true, data: false });
     }
     if (value) {
-      value.forEach((project_name, index) => {
-        if (project_name) {
-          op_service.opGetLiveData(project_name).then(async (res) => {
-            dataMapOP(res.data, project_name, res.node_id).then((val) => {
+      for (let index = 0; index< value.length; index++) {
+        if (value[index]) {
+          op_service.opGetLiveData(value[index]).then(async (res) => {
+            dataMapOP(res.data, value[index], res.node_id).then((val) => {
               tempOP.push(val);
 
-              if (index + 1 == value.length) {
+              if (tempOP.length == value.length) {
                 if (live) {
                   setDataOP(false);
                 } else {
@@ -223,7 +240,7 @@ const ChartOP = ({ getApi }) => {
             });
           });
         }
-      });
+      }
     } else {
       setLoading({ load: false, data: false });
     }
@@ -286,7 +303,10 @@ const ChartOP = ({ getApi }) => {
           </Grid>
 
           {!loading.load && !loading.data && (
-            <div className={classes.loading}>Koneksi bermasalah</div>
+            <div className={classes.connection_problem}>
+              <img className={classes.connection_problem_img} src={disconnect} alt="Disconnect" />
+              <div>Koneksi bermasalah</div>
+            </div>
           )}
 
           {loading.load && (
