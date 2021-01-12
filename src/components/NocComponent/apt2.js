@@ -8,6 +8,7 @@ import { Bar } from "react-chartjs-2";
 import clsx from "clsx";
 import { Tooltip } from "@material-ui/core";
 import DiscFullIcon from "@material-ui/icons/DiscFull";
+import MemoryIcon from "@material-ui/icons/Memory";
 
 const useStyle = makeStyles((theme) => ({
   chartBox: {
@@ -119,16 +120,19 @@ const NocApt2Component = ({ data, capacity }) => {
     pms: 0,
     bv: 0,
     disk: false,
+    ram: false,
   });
 
   useEffect(() => {
     if (data) {
       setDataNoc(data);
       const disk = capacity.disk_used ? capacity.disk_used.slice(0, -2) : 8;
+      const ram = capacity.free_ram ? capacity.free_ram.slice(0, -2) : 300;
       setState({
         pms: data.data.pms.find((e) => e != null) || 0,
         bv: data.data.bv.find((e) => e != null) || 0,
         disk: disk >= 10 ? true : false,
+        ram: ram <= 200 ? true : false,
       });
     }
   }, [data]);
@@ -145,6 +149,7 @@ const NocApt2Component = ({ data, capacity }) => {
                 <Typography paragraph className={classes.textStyle}>
                   {dataNoc.nojs.nojs} {dataNoc.nojs.site}{" "}
                   {state.disk && <DiscFullIcon />}
+                  {state.ram && <MemoryIcon />}
                 </Typography>
               </span>
               <span style={{ marginRight: 10 }}>

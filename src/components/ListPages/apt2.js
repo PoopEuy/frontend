@@ -63,6 +63,7 @@ const Apt2 = () => {
       state: "/apt2/prtg/state",
     },
     capacity: "/apt2/capacity",
+    program: "/apt2/program",
   };
 
   const [state, setState] = useState({
