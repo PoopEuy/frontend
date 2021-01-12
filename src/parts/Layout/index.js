@@ -11,7 +11,7 @@ import { connect } from "react-redux";
 
 //components OR parts local
 import { getApt1Nojs } from "@redux/apt1/nojs/action";
-import { getApt2Nojs } from "@redux/apt2/nojs/action";
+import { getApt2Nojs, getApt2Capacity } from "@redux/apt2/nojs/action";
 // import { WsLogger, WsConnect } from "@redux/apt1/logger/action";
 import DrawerHeader from "@parts/DrawerHeader";
 import Apt1 from "@components/ListPages/apt1";
@@ -54,12 +54,13 @@ const listPages = () => {
   );
 };
 
-const Layout = ({ children, getApt1Nojs, getApt2Nojs }) => {
+const Layout = ({ children, getApt1Nojs, getApt2Nojs, getApt2Capacity }) => {
   const router = useRouter().pathname;
 
   useEffect(() => {
     getApt1Nojs();
     getApt2Nojs();
+    getApt2Capacity();
     // WsConnect();
     // WsLogger();
   }, []);
@@ -81,6 +82,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getApt1Nojs: bindActionCreators(getApt1Nojs, dispatch),
     getApt2Nojs: bindActionCreators(getApt2Nojs, dispatch),
+    getApt2Capacity: bindActionCreators(getApt2Capacity, dispatch),
     // WsLogger: bindActionCreators(WsLogger, dispatch),
     // WsConnect: bindActionCreators(WsConnect, dispatch),
   };

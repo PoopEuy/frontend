@@ -65,3 +65,22 @@ export const apt2GetLogger = async (param) => {
 
   return result;
 };
+
+export const apt2ApiCapacity = async (params) => {
+  const result = await instanceApt2
+    .get(`/api/capacity`)
+    .then((res) => {
+      return {
+        error: false,
+        data: res.data,
+      };
+    })
+    .catch((error) => {
+      return {
+        error: true,
+        message: error.message,
+      };
+    });
+
+  return result;
+};

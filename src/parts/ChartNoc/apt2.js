@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ChartNoc = ({ dataApt2Nojs, getApi }) => {
+const ChartNoc = ({ dataApt2Nojs, getApi, dataApt2Capacity }) => {
   const router = useRouter();
   const classes = useStyles();
   const itemsPerPage = 15;
@@ -38,6 +38,7 @@ const ChartNoc = ({ dataApt2Nojs, getApi }) => {
   const [noOfPages, setNoOfPages] = useState(0);
   const [loading, setLoading] = useState({ load: false, data: false });
   const [dataNoc, setDataNoc] = useState(false);
+  const [dataCapacity, setDataCapacity] = useState(false);
   const [time, setTime] = useState({
     interval: null,
     timeOut: null,
@@ -86,7 +87,7 @@ const ChartNoc = ({ dataApt2Nojs, getApi }) => {
         const response = e.data;
         const responseData = response && response.data[0];
         const temp = response && tempData.find((e) => e.nojs == response.nojs);
-        console.log("temp", temp.data);
+        // console.log("temp", temp.data);
         if (response.total != 0) {
           if (temp.data.length != 0) {
             const compere = temp.data[0].ts != responseData.ts;
@@ -116,20 +117,25 @@ const ChartNoc = ({ dataApt2Nojs, getApi }) => {
     setNoOfPages(Math.ceil(dataApt2Nojs.length / itemsPerPage));
     const tempPage = parseInt(router.query.page);
     if (tempPage > 0) {
+      // setDataCapacity(dataApt2Capacity);
       handleChange("", parseInt(tempPage));
     }
   }, [dataApt2Nojs]);
 
   useEffect(() => {
+    setDataCapacity(dataApt2Capacity);
+  }, [dataApt2Capacity]);
+
+  useEffect(() => {
     const intrvl = 300000;
-    console.log(`time to Live ${timeInterval}`);
+    // console.log(`time to Live ${timeInterval}`);
     if (timeInterval) {
       let timeout = setTimeout(() => {
         liveData();
-        console.log("tim out");
+        // console.log("tim out");
         let interval = setInterval(() => {
           liveData();
-          console.log("tim interval");
+          // console.log("tim interval");
         }, intrvl);
         setTime({ ...time, interval: interval });
       }, timeInterval * 1000);
@@ -160,6 +166,7 @@ const ChartNoc = ({ dataApt2Nojs, getApi }) => {
                     <NocComponent
                       key={js.nojs}
                       data={dataNoc.find((e) => e.nojs.nojs === js.nojs)}
+                      capacity={dataCapacity.find((e) => e.nojs === js.nojs)}
                     />
                   );
                 })}
@@ -191,6 +198,7 @@ const ChartNoc = ({ dataApt2Nojs, getApi }) => {
 const mapStateToProps = (state) => {
   return {
     dataApt2Nojs: state.DataApt2Nojs.dataApt2Nojs,
+    dataApt2Capacity: state.DataApt2Nojs.dataApt2Capacity,
   };
 };
 

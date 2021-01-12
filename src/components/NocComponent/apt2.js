@@ -7,6 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Bar } from "react-chartjs-2";
 import clsx from "clsx";
 import { Tooltip } from "@material-ui/core";
+import DiscFullIcon from "@material-ui/icons/DiscFull";
 
 const useStyle = makeStyles((theme) => ({
   chartBox: {
@@ -31,6 +32,11 @@ const useStyle = makeStyles((theme) => ({
   title: {
     flexGrow: 1,
     marginLeft: 10,
+  },
+  titleRead: {
+    flexGrow: 1,
+    marginLeft: 10,
+    background: "red",
   },
   bgRed: {
     background: "red",
@@ -106,20 +112,23 @@ const option = (min, max) => {
   };
 };
 
-const NocApt2Component = ({ data }) => {
+const NocApt2Component = ({ data, capacity }) => {
   const classes = useStyle();
   const [dataNoc, setDataNoc] = useState(false);
   const [state, setState] = useState({
     pms: 0,
     bv: 0,
+    disk: false,
   });
 
   useEffect(() => {
     if (data) {
       setDataNoc(data);
+      const disk = capacity.disk_used ? capacity.disk_used.slice(0, -2) : 8;
       setState({
         pms: data.data.pms.find((e) => e != null) || 0,
         bv: data.data.bv.find((e) => e != null) || 0,
+        disk: disk >= 10 ? true : false,
       });
     }
   }, [data]);
@@ -134,7 +143,8 @@ const NocApt2Component = ({ data }) => {
             <Grid container>
               <span className={classes.title}>
                 <Typography paragraph className={classes.textStyle}>
-                  {dataNoc.nojs.nojs} {dataNoc.nojs.site}
+                  {dataNoc.nojs.nojs} {dataNoc.nojs.site}{" "}
+                  {state.disk && <DiscFullIcon />}
                 </Typography>
               </span>
               <span style={{ marginRight: 10 }}>
@@ -236,6 +246,7 @@ const NocApt2Component = ({ data }) => {
 
 NocApt2Component.propTypes = {
   data: PropTypes.object,
+  capacity: PropTypes.object,
 };
 
 export default NocApt2Component;

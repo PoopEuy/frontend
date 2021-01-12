@@ -22,6 +22,7 @@ import ContactsIcon from "@material-ui/icons/Contacts";
 import DetailsIcon from "@material-ui/icons/Details";
 import PermContactCalendarIcon from "@material-ui/icons/PermContactCalendar";
 import SettingsApplicationsIcon from "@material-ui/icons/SettingsApplications";
+import SaveIcon from "@material-ui/icons/Save";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,6 +62,7 @@ const Apt2 = () => {
       sla: "/apt2/prtg/sla",
       state: "/apt2/prtg/state",
     },
+    capacity: "/apt2/capacity",
   };
 
   const [state, setState] = useState({
@@ -256,6 +258,22 @@ const Apt2 = () => {
                 <SettingsApplicationsIcon />
               </ListItemIcon>
               <ListItemText primary="Service Calls" />
+            </ListItem>
+          </Link>
+        </List>
+
+        <List component="div" disablePadding dense={true}>
+          <Link href={apt2.capacity}>
+            <ListItem
+              button
+              className={clsx(classes.nested, {
+                [classes.actived]: router == apt2.capacity,
+              })}
+            >
+              <ListItemIcon>
+                <SaveIcon />
+              </ListItemIcon>
+              <ListItemText primary="Capacity" />
             </ListItem>
           </Link>
         </List>
