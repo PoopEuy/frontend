@@ -4,7 +4,6 @@ import Pagination from "@material-ui/lab/Pagination";
 import NocComponent from "@components/NocComponent/apt2";
 import LoadingChart from "@components/LoadingChart";
 import { dataMapApt2 } from "@helpers/dataMapApt2";
-import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import { initTime } from "@helpers/intitTime";
 
@@ -30,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ChartNoc = ({ dataApt2Nojs, getApi, dataApt2Capacity }) => {
+const ChartNoc = ({ nojsUser, getApi, capacity, url, mppt3 }) => {
   const router = useRouter();
   const classes = useStyles();
   const itemsPerPage = 15;
@@ -52,10 +51,10 @@ const ChartNoc = ({ dataApt2Nojs, getApi, dataApt2Capacity }) => {
       clearInterval(time.interval);
       tempData = [];
       let tempNoc = [];
-      router.push(`/apt2/noc?page=${value}`);
+      router.push(`${url}?page=${value}`);
       setLoading({ load: true, data: false });
       setPage(value);
-      const temp = dataApt2Nojs.slice(
+      const temp = nojsUser.slice(
         (value - 1) * itemsPerPage,
         value * itemsPerPage
       );
@@ -114,17 +113,17 @@ const ChartNoc = ({ dataApt2Nojs, getApi, dataApt2Capacity }) => {
   };
 
   useEffect(() => {
-    setNoOfPages(Math.ceil(dataApt2Nojs.length / itemsPerPage));
+    setNoOfPages(Math.ceil(nojsUser.length / itemsPerPage));
     const tempPage = parseInt(router.query.page);
     if (tempPage > 0) {
-      // setDataCapacity(dataApt2Capacity);
+      // setDataCapacity(capacity);
       handleChange("", parseInt(tempPage));
     }
-  }, [dataApt2Nojs]);
+  }, [nojsUser]);
 
   useEffect(() => {
-    setDataCapacity(dataApt2Capacity);
-  }, [dataApt2Capacity]);
+    setDataCapacity(capacity);
+  }, [capacity]);
 
   useEffect(() => {
     const intrvl = 300000;
@@ -149,7 +148,7 @@ const ChartNoc = ({ dataApt2Nojs, getApi, dataApt2Capacity }) => {
 
   return (
     <>
-      {dataApt2Nojs && (
+      {nojsUser && (
         <>
           <Grid
             container
@@ -159,14 +158,18 @@ const ChartNoc = ({ dataApt2Nojs, getApi, dataApt2Capacity }) => {
           >
             {dataNoc &&
               loading.data &&
-              dataApt2Nojs
+              nojsUser
                 .slice((page - 1) * itemsPerPage, page * itemsPerPage)
                 .map((js) => {
                   return (
                     <NocComponent
                       key={js.nojs}
                       data={dataNoc.find((e) => e.nojs.nojs === js.nojs)}
-                      capacity={dataCapacity.find((e) => e.nojs === js.nojs)}
+                      capacity={
+                        dataCapacity &&
+                        dataCapacity.find((e) => e.nojs === js.nojs)
+                      }
+                      mppt3={mppt3}
                     />
                   );
                 })}
@@ -195,11 +198,4 @@ const ChartNoc = ({ dataApt2Nojs, getApi, dataApt2Capacity }) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    dataApt2Nojs: state.DataApt2Nojs.dataApt2Nojs,
-    dataApt2Capacity: state.DataApt2Nojs.dataApt2Capacity,
-  };
-};
-
-export default connect(mapStateToProps, null)(ChartNoc);
+export default ChartNoc;

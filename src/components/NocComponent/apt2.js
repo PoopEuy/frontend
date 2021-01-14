@@ -113,7 +113,7 @@ const option = (min, max) => {
   };
 };
 
-const NocApt2Component = ({ data, capacity }) => {
+const NocApt2Component = ({ data, capacity, mppt3 }) => {
   const classes = useStyle();
   const [dataNoc, setDataNoc] = useState(false);
   const [state, setState] = useState({
@@ -201,16 +201,18 @@ const NocApt2Component = ({ data, capacity }) => {
             />
           </Box>
 
-          <Box className={classes.chartEh}>
-            <Bar
-              data={dataToDataChart({
-                labels: dataNoc.data.labels,
-                data: dataNoc.data.eh3,
-                color: dataNoc.data.color_eh3,
-              })}
-              options={option(0, 55)}
-            />
-          </Box>
+          {mppt3 && (
+            <Box className={classes.chartEh}>
+              <Bar
+                data={dataToDataChart({
+                  labels: dataNoc.data.labels,
+                  data: dataNoc.data.eh3,
+                  color: dataNoc.data.color_eh3,
+                })}
+                options={option(0, 55)}
+              />
+            </Box>
+          )}
 
           <Box className={classes.chartBv}>
             <Bar
@@ -252,6 +254,7 @@ const NocApt2Component = ({ data, capacity }) => {
 NocApt2Component.propTypes = {
   data: PropTypes.object,
   capacity: PropTypes.object,
+  mppt3: PropTypes.bool,
 };
 
 export default NocApt2Component;

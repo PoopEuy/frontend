@@ -4,7 +4,7 @@ import thunkMiddleware from "redux-thunk";
 import DataTable from "@redux/dataTable/reducer";
 import DataApt1Nojs from "@redux/apt1/nojs/reducer";
 import DataApt2Nojs from "@redux/apt2/nojs/reducer";
-// import DataApt1Logger from "@redux/apt1/logger/reducer";
+import DataApt1v3 from "@redux/apt1v3/reducer";
 import Clock from "@redux/clock/reducer";
 
 const bindMiddleware = (middleware) => {
@@ -19,7 +19,7 @@ const combinedReducer = combineReducers({
   DataTable,
   DataApt1Nojs,
   DataApt2Nojs,
-  // DataApt1Logger,
+  DataApt1v3,
   Clock,
 });
 

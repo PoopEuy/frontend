@@ -12,9 +12,11 @@ import { connect } from "react-redux";
 //components OR parts local
 import { getApt1Nojs } from "@redux/apt1/nojs/action";
 import { getApt2Nojs, getApt2Capacity } from "@redux/apt2/nojs/action";
+import { getApt1v3Nojs, getApt1v3Capacity } from "@redux/apt1v3/action";
 // import { WsLogger, WsConnect } from "@redux/apt1/logger/action";
 import DrawerHeader from "@parts/DrawerHeader";
 import Apt1 from "@components/ListPages/apt1";
+import Apt1v3 from "@components/ListPages/apt1v3";
 import Apt2 from "@components/ListPages/apt2";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -42,6 +44,7 @@ const listPages = () => {
   return (
     <>
       <Apt1 />
+      <Apt1v3 />
       <Apt2 />
       <Link
         href={{
@@ -54,13 +57,22 @@ const listPages = () => {
   );
 };
 
-const Layout = ({ children, getApt1Nojs, getApt2Nojs, getApt2Capacity }) => {
+const Layout = ({
+  children,
+  getApt1Nojs,
+  getApt2Nojs,
+  getApt2Capacity,
+  getApt1v3Nojs,
+  getApt1v3Capacity,
+}) => {
   const router = useRouter().pathname;
 
   useEffect(() => {
     getApt1Nojs();
     getApt2Nojs();
     getApt2Capacity();
+    getApt1v3Nojs();
+    getApt1v3Capacity();
     // WsConnect();
     // WsLogger();
   }, []);
@@ -83,6 +95,8 @@ const mapDispatchToProps = (dispatch) => {
     getApt1Nojs: bindActionCreators(getApt1Nojs, dispatch),
     getApt2Nojs: bindActionCreators(getApt2Nojs, dispatch),
     getApt2Capacity: bindActionCreators(getApt2Capacity, dispatch),
+    getApt1v3Nojs: bindActionCreators(getApt1v3Nojs, dispatch),
+    getApt1v3Capacity: bindActionCreators(getApt1v3Capacity, dispatch),
     // WsLogger: bindActionCreators(WsLogger, dispatch),
     // WsConnect: bindActionCreators(WsConnect, dispatch),
   };
