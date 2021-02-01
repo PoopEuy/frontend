@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const PrtgSla = ({ getState }) => {
+const PrtgSla = ({ getState, dataNojs }) => {
   const clasess = useStyles();
   const [loading, setLoading] = useState(false);
   const [dataTable, setDataTable] = useState({
@@ -82,7 +82,11 @@ const PrtgSla = ({ getState }) => {
     <Paper elevation={4}>
       <Paper className={clasess.form}>
         <div>
-          <FormPickupWithNojs submit={submit} loading={loading} />
+          <FormPickupWithNojs
+            submit={submit}
+            loading={loading}
+            dataNojs={dataNojs}
+          />
         </div>
         {dataTable.data.data.length !== 0 && (
           <div className={clasess.table}>

@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const PrtgSla = ({ getSla }) => {
+const PrtgSla = ({ getSla, ip, dataNojs }) => {
   const clasess = useStyles();
   const [loading, setLoading] = useState(false);
   const [dataTable, setDataTable] = useState({
@@ -54,6 +54,7 @@ const PrtgSla = ({ getSla }) => {
     js.forEach((e) => {
       let temp = getSla({
         ...e,
+        ip: ip,
         sdate: start,
         edate: end,
       });
@@ -80,7 +81,11 @@ const PrtgSla = ({ getSla }) => {
     <Paper elevation={4}>
       <Paper className={clasess.form}>
         <div>
-          <FormPickupWithNojs submit={submit} loading={loading} />
+          <FormPickupWithNojs
+            submit={submit}
+            loading={loading}
+            dataNojs={dataNojs}
+          />
         </div>
         {dataTable.data.data.length !== 0 && (
           <div className={clasess.table}>
