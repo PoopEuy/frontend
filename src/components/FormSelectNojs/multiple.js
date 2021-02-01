@@ -1,7 +1,6 @@
 import { Grid } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { Controller } from "react-hook-form";
-import { connect } from "react-redux";
 import AutoComplateMultiple from "./autoComplateMultiple";
 
 // const options = [
@@ -13,7 +12,7 @@ import AutoComplateMultiple from "./autoComplateMultiple";
 //   { label: "far", value: "far" },
 // ];
 
-const Multiple = ({ control, setValue, errors, dataApt1Nojs }) => {
+const Multiple = ({ control, setValue, errors, dataNojs }) => {
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [options, setOptions] = useState(false);
 
@@ -34,8 +33,8 @@ const Multiple = ({ control, setValue, errors, dataApt1Nojs }) => {
   };
 
   useEffect(() => {
-    setOptions(dataApt1Nojs);
-  }, [dataApt1Nojs]);
+    setOptions(dataNojs);
+  }, [dataNojs]);
 
   return (
     <>
@@ -69,10 +68,4 @@ const Multiple = ({ control, setValue, errors, dataApt1Nojs }) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    dataApt1Nojs: state.DataApt1Nojs.dataApt1Nojs,
-  };
-};
-
-export default connect(mapStateToProps, null)(Multiple);
+export default Multiple;
