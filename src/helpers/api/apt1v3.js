@@ -66,6 +66,27 @@ export const apt1v3GetLogger = async (param) => {
   return result;
 };
 
+export const apt1v3GetLoggerSla = async (param) => {
+  const result = await instanceApt1v3
+    .get(`/api/logger/sla`, {
+      params: param,
+    })
+    .then((res) => {
+      return {
+        data: res.data,
+        error: false,
+      };
+    })
+    .catch((error) => {
+      return {
+        error: true,
+        message: error.message,
+      };
+    });
+
+  return result;
+};
+
 export const apt1v3ApiCapacity = async (params) => {
   const result = await instanceApt1v3
     .get(`/api/capacity`)

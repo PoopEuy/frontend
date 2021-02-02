@@ -134,22 +134,6 @@ const Apt1v3 = () => {
         </List>
 
         <List component="div" disablePadding dense={true}>
-          <Link href={apt1v3.noc}>
-            <ListItem
-              button
-              className={clsx(classes.nested, {
-                [classes.actived]: router == apt1v3.nojsuser,
-              })}
-            >
-              <ListItemIcon>
-                <EqualizerIcons />
-              </ListItemIcon>
-              <ListItemText primary="NOJS" />
-            </ListItem>
-          </Link>
-        </List>
-        {/* 
-        <List component="div" disablePadding dense={true}>
           <ListItem
             button
             className={classes.nested}
@@ -214,7 +198,7 @@ const Apt1v3 = () => {
           </Collapse>
         </List>
 
-        <List component="div" disablePadding dense={true}>
+        {/* <List component="div" disablePadding dense={true}>
           <ListItem
             button
             className={classes.nested}
@@ -293,8 +277,7 @@ const Apt1v3 = () => {
               <ListItemText primary="Capacity" />
             </ListItem>
           </Link>
-        </List>
-       */}
+        </List> */}
       </Collapse>
     </Paper>
   );
