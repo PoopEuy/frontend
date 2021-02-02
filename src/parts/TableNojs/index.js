@@ -65,6 +65,17 @@ const TableNojs = ({
   };
 
   const submit = async (data) => {
+    data = {
+      ...data,
+      id_lvdvsat: data.id_lvdvsat == "" ? null : data.id_lvdvsat,
+      id_ping: data.id_ping == "" ? null : data.id_ping,
+      id_batvolt: data.id_batvolt == "" ? null : data.id_batvolt,
+      id_vsatcurr: data.id_vsatcurr == "" ? null : data.id_vsatcurr,
+      id_btscurr: data.id_btscurr == "" ? null : data.id_btscurr,
+      mitra: data.mitra ? data.mitra.id : null,
+      gs: data.gs ? data.gs.id : null,
+    };
+
     records ? await editAptNojs(data.nojs, data) : await addAptNojs(data);
     Swal.fire("success!", "Data has been saved!", "success");
     setOpenDialog(false);
