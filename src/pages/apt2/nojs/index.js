@@ -14,18 +14,24 @@ const Apt2Nojs = ({
   getApt2Nojs,
   editApt2Nojs,
   addApt2Nojs,
+  dataVendor,
 }) => {
   const [state, setState] = useState();
   useEffect(() => {
-    if (dataApt2Nojs) {
+    if (dataApt2Nojs && dataVendor) {
       const temp = [];
       dataApt2Nojs.forEach((el) => {
+        console.log(el);
+        const mitra = dataVendor.find((e) => e.id == el.mitra);
+        const gs = dataVendor.find((e) => e.id == el.gs);
+        console.log(gs);
         temp.push({
           nojs: el.nojs,
           site: el.site,
           provinsi: el.provinsi,
           lc: el.lc,
-          mitra: el.mitra == " " ? "Valtel" : el.mitra,
+          mitra: mitra ? mitra.pt : "",
+          no_mitra: mitra ? mitra.phone : "",
           ip: el.ip,
           latitude: el.latitude,
           longitude: el.longitude,
@@ -34,11 +40,16 @@ const Apt2Nojs = ({
           id_batvolt: el.id_batt_volt,
           id_vsatcurr: el.id_vsat_curr,
           id_btscurr: el.id_bts_curr,
+          darat: el.darat,
+          gs: gs ? gs.pt : "",
+          no_gs: gs ? gs.phone : "",
+          laut: el.laut,
+          udara: el.udara,
         });
       });
       setState(temp);
     }
-  }, [dataApt2Nojs]);
+  }, [dataApt2Nojs, dataVendor]);
   return (
     <TableNojs
       dataNojs={state}
@@ -55,6 +66,7 @@ const mapStateToProps = (state) => {
   return {
     dataApt2Nojs: state.DataApt2Nojs.dataApt2Nojs,
     errorApt2Nojs: state.DataApt2Nojs.errorApt2Nojs,
+    dataVendor: state.Setting.vendor,
   };
 };
 

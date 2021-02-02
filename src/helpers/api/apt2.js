@@ -66,6 +66,27 @@ export const apt2GetLogger = async (param) => {
   return result;
 };
 
+export const apt2GetLoggerSla = async (param) => {
+  const result = await instanceApt2
+    .get(`/api/logger/sla`, {
+      params: param,
+    })
+    .then((res) => {
+      return {
+        data: res.data,
+        error: false,
+      };
+    })
+    .catch((error) => {
+      return {
+        error: true,
+        message: error.message,
+      };
+    });
+
+  return result;
+};
+
 export const apt2ApiCapacity = async (params) => {
   const result = await instanceApt2
     .get(`/api/capacity`)
@@ -99,6 +120,57 @@ export const apt2ApiProgram = async (params) => {
         error: true,
         message: error.message,
       };
+    });
+
+  return result;
+};
+
+export const apt2ApiGetVendor = async () => {
+  const result = await instanceApt2
+    .get(`/api/vendors`)
+    .then((res) => {
+      return {
+        error: false,
+        data: res.data,
+      };
+    })
+    .catch((error) => {
+      return {
+        error: true,
+        message: error.message,
+      };
+    });
+
+  return result;
+};
+
+export const apt2ApiAddVendor = async (data) => {
+  const result = await instanceApt2
+    .post(`/api/vendors`, data)
+    .then((res) => {
+      return {
+        error: false,
+        data: res.data,
+      };
+    })
+    .catch((error) => {
+      return {
+        error: true,
+        message: error.message,
+      };
+    });
+
+  return result;
+};
+
+export const apt2ApiEditVendor = async (id, data) => {
+  const result = await instanceApt2
+    .put(`/api/vendors/${id}`, data)
+    .then((res) => {
+      return res.status;
+    })
+    .catch((error) => {
+      return error.message;
     });
 
   return result;

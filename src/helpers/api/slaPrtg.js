@@ -1,19 +1,22 @@
 import { apt1PrtgSla } from "./apt1";
 
 const SlaPrtgGetAll = async (data) => {
+  const ip = data.ip;
   const sdate = data.sdate;
   const edate = data.edate;
   const username = "Power APT";
   const password = "APT12345";
 
   const vsat = apt1PrtgSla({
-    id: data.id_lvdvsat,
+    ip,
+    id: data.id_lvdvsat || data.id_lvd_vsat,
     sdate,
     edate,
     username,
     password,
   });
   const ping = apt1PrtgSla({
+    ip,
     id: data.id_ping,
     sdate,
     edate,
@@ -21,21 +24,24 @@ const SlaPrtgGetAll = async (data) => {
     password,
   });
   const batvolt = apt1PrtgSla({
-    id: data.id_batvolt,
+    ip,
+    id: data.id_batvolt || data.id_batt_volt,
     sdate,
     edate,
     username,
     password,
   });
   const vsatcurr = apt1PrtgSla({
-    id: data.id_vsatcurr,
+    ip,
+    id: data.id_vsatcurr || data.id_vsat_curr,
     sdate,
     edate,
     username,
     password,
   });
   const btscurr = apt1PrtgSla({
-    id: data.id_btscurr,
+    ip,
+    id: data.id_btscurr || data.id_bts_curr,
     sdate,
     edate,
     username,
