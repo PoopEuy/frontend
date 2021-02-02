@@ -5,6 +5,7 @@ import DataTable from "@redux/dataTable/reducer";
 import DataApt1Nojs from "@redux/apt1/nojs/reducer";
 import DataApt2Nojs from "@redux/apt2/nojs/reducer";
 import DataApt1v3 from "@redux/apt1v3/reducer";
+import Setting from "@redux/setting/reducer";
 import Clock from "@redux/clock/reducer";
 
 const bindMiddleware = (middleware) => {
@@ -20,6 +21,7 @@ const combinedReducer = combineReducers({
   DataApt1Nojs,
   DataApt2Nojs,
   DataApt1v3,
+  Setting,
   Clock,
 });
 
