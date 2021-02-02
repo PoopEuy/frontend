@@ -52,9 +52,12 @@ const PrtgSla = ({ getSla, ip, dataNojs }) => {
     )}`;
 
     js.forEach((e) => {
+      const siteReloc = ["Klabot", "Wilty", "Boha", "Waan", "Klayili"].includes(
+        e.site
+      );
       let temp = getSla({
         ...e,
-        ip: ip,
+        ip: siteReloc ? "202.43.73.150" : ip,
         sdate: start,
         edate: end,
       });
