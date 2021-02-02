@@ -15,6 +15,7 @@ import {
 } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
+import FormSelectVendor from "@components/FormSelectVendor";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,7 +31,6 @@ const defaultValues = {
   site: "",
   provinsi: "",
   lc: "",
-  mitra: "",
   ip: "",
   latitude: "",
   longitude: "",
@@ -39,6 +39,9 @@ const defaultValues = {
   id_batvolt: "",
   id_vsatcurr: "",
   id_btscurr: "",
+  darat: "",
+  laut: "",
+  udara: "",
 };
 
 const CostumeField = ({ name, required, control, errors }) => {
@@ -124,11 +127,11 @@ const FormNojs = ({ value, submit, loading }) => {
     { name: "id_batvolt", required: false },
     { name: "id_vsatcurr", required: false },
     { name: "id_btscurr", required: false },
+    { name: "darat", required: false },
+    { name: "laut", required: false },
+    { name: "udara", required: false },
   ];
-  const textSelect = [
-    { name: "lc", data: lc, required: true },
-    { name: "mitra", data: mitra, required: true },
-  ];
+  const textSelect = [{ name: "lc", data: lc, required: true }];
 
   return (
     <form onSubmit={handleSubmit(submit)}>
@@ -144,7 +147,6 @@ const FormNojs = ({ value, submit, loading }) => {
             />
           );
         })}
-
         {textSelect.map((field) => {
           return (
             <CostumeSelect
@@ -157,7 +159,19 @@ const FormNojs = ({ value, submit, loading }) => {
             />
           );
         })}
+        <FormSelectVendor
+          control={control}
+          errors={errors}
+          name="mitra"
+          required={false}
+        />
 
+        <FormSelectVendor
+          control={control}
+          errors={errors}
+          name="gs"
+          required={false}
+        />
         {textField2.map((field) => {
           return (
             <CostumeField
