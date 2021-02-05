@@ -5,11 +5,11 @@ import { Controller } from "react-hook-form";
 import { Grid } from "@material-ui/core";
 import { connect } from "react-redux";
 
-const NojsSelect = ({ control, dataApt1Nojs, errors }) => {
+const NojsSelect = ({ control, dataNojs, errors }) => {
   const [state, setState] = useState(false);
   useEffect(() => {
-    setState(dataApt1Nojs);
-  }, [dataApt1Nojs]);
+    setState(dataNojs);
+  }, [dataNojs]);
 
   return (
     <>
@@ -55,10 +55,4 @@ const NojsSelect = ({ control, dataApt1Nojs, errors }) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    dataApt1Nojs: state.DataApt1Nojs.dataApt1Nojs,
-  };
-};
-
-export default connect(mapStateToProps, null)(NojsSelect);
+export default NojsSelect;

@@ -215,7 +215,7 @@ export const FormPickupServiceCall = ({ submit, loading }) => {
   );
 };
 
-export const FormPickupWithNojs = ({ submit, loading, dataNojs }) => {
+export const FormPickupWithNojs = ({ submit, loading, dataNojs, single }) => {
   const { handleSubmit, control, errors, setValue } = useForm({
     defaultValues,
     criteriaMode: "all",
@@ -266,13 +266,20 @@ export const FormPickupWithNojs = ({ submit, loading, dataNojs }) => {
             />
           </MuiPickersUtilsProvider>
 
-          {/* <FormSelectNojs control={control} errors={errors} /> */}
-          <Multiple
-            control={control}
-            setValue={setValue}
-            errors={errors}
-            dataNojs={dataNojs}
-          />
+          {single ? (
+            <FormSelectNojs
+              control={control}
+              errors={errors}
+              dataNojs={dataNojs}
+            />
+          ) : (
+            <Multiple
+              control={control}
+              setValue={setValue}
+              errors={errors}
+              dataNojs={dataNojs}
+            />
+          )}
           <Grid item sm={6} xs={12}>
             <ButtonComponent loading={loading} type="submit" size="large">
               START
