@@ -21,7 +21,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Apt2NojsSla = ({ getSla, dataNojs, single }) => {
+const Apt2NojsSla = ({ getSla, dataNojs, single, v3 }) => {
   const clasess = useStyles();
   const [loading, setLoading] = useState(false);
   const [dataTable, setDataTable] = useState({
@@ -47,17 +47,28 @@ const Apt2NojsSla = ({ getSla, dataNojs, single }) => {
       data.end.getMinutes()
     )}:00`;
 
-    const param = {
-      nojs: data.nojs.id,
-      start: start,
-      end: end,
-      daily: true,
-    };
+    const param = v3
+      ? {
+          nojs: data.nojs.id,
+          start: start,
+          end: end,
+          daily: true,
+        }
+      : {
+          nojs: data.nojs.nojs,
+          sdate: start,
+          edate: end,
+          detail: true,
+        };
+
     const result = getSla(param);
+
     result
       .then((res) => {
         if (!res.error) {
-          const data = jsonToTable(res.data.data);
+          const data = v3
+            ? jsonToTable(res.data.data)
+            : jsonToTable(res.data.daily);
           tempColumns = data.columns;
           tempData = tempData.concat(data.data);
           setDataTable({
@@ -107,6 +118,11 @@ const Apt2NojsSla = ({ getSla, dataNojs, single }) => {
 
 Apt2NojsSla.propTypes = {
   getSla: PropTypes.func,
+  v3: PropTypes.bool,
+};
+
+Apt2NojsSla.defaultProps = {
+  v3: true,
 };
 
 export default Apt2NojsSla;
