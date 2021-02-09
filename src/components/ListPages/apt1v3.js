@@ -23,6 +23,7 @@ import DetailsIcon from "@material-ui/icons/Details";
 import PermContactCalendarIcon from "@material-ui/icons/PermContactCalendar";
 import SettingsApplicationsIcon from "@material-ui/icons/SettingsApplications";
 import SaveIcon from "@material-ui/icons/Save";
+import CodeIcon from "@material-ui/icons/Code";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -213,6 +214,38 @@ const Apt1v3 = () => {
             </List>
             <Divider />
           </Collapse>
+        </List>
+
+        <List component="div" disablePadding dense={true}>
+          <Link href={apt1v3.capacity}>
+            <ListItem
+              button
+              className={clsx(classes.nested, {
+                [classes.actived]: router == apt1v3.capacity,
+              })}
+            >
+              <ListItemIcon>
+                <SaveIcon />
+              </ListItemIcon>
+              <ListItemText primary="Capacity" />
+            </ListItem>
+          </Link>
+        </List>
+
+        <List component="div" disablePadding dense={true}>
+          <Link href={apt1v3.program}>
+            <ListItem
+              button
+              className={clsx(classes.nested, {
+                [classes.actived]: router == apt1v3.program,
+              })}
+            >
+              <ListItemIcon>
+                <CodeIcon />
+              </ListItemIcon>
+              <ListItemText primary="Program" />
+            </ListItem>
+          </Link>
         </List>
 
         {/* <List component="div" disablePadding dense={true}>
