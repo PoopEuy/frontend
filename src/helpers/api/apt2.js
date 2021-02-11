@@ -175,3 +175,29 @@ export const apt2ApiEditVendor = async (id, data) => {
 
   return result;
 };
+
+export const apiGetCutoff = async (param) => {
+  const result = await instanceApt2
+    .get(`/api/cutoff`, { params: { site: param } })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((error) => {
+      return error.message;
+    });
+
+  return result;
+};
+
+export const apiAddCutoff = async (data) => {
+  const result = await instanceApt2
+    .post(`/api/cutoff`, data)
+    .then((res) => {
+      return res.status;
+    })
+    .catch((error) => {
+      return error.message;
+    });
+
+  return result;
+};

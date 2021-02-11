@@ -4,7 +4,7 @@ import TableVendor from "@parts/TableVendor"; // components OR parts local
 import { getVendor, editVendor, addVendor } from "@redux/setting/action";
 import { useEffect, useState } from "react";
 
-const Apt2Nojs = ({ dataVendor, getVendor, editVendor, addVendor }) => {
+const index = ({ dataVendor, getVendor, editVendor, addVendor }) => {
   const [state, setState] = useState();
   useEffect(() => {
     if (dataVendor) {
@@ -36,4 +36,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Apt2Nojs);
+export default connect(mapStateToProps, mapDispatchToProps)(index);

@@ -71,7 +71,7 @@ const TableVendor = ({
   };
 
   useEffect(() => {
-    if (dataVendor) {
+    if (dataVendor && dataVendor.length > 0) {
       const result = jsonToTable(dataVendor);
       result.columns.push({
         name: "id",
@@ -95,6 +95,11 @@ const TableVendor = ({
       });
       setDataTable({
         data: result,
+        error: false,
+      });
+    } else {
+      setDataTable({
+        data: { data: [], columns: [] },
         error: false,
       });
     }

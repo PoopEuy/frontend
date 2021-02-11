@@ -18,9 +18,7 @@ import InboxIcon from "@material-ui/icons/MoveToInbox";
 import ExpandLessIcons from "@material-ui/icons/ExpandLess";
 import ExpandMoreIcons from "@material-ui/icons/ExpandMore";
 import EqualizerIcons from "@material-ui/icons/Equalizer";
-import ContactsIcon from "@material-ui/icons/Contacts";
-import DetailsIcon from "@material-ui/icons/Details";
-import PermContactCalendarIcon from "@material-ui/icons/PermContactCalendar";
+import OfflineBoltIcon from "@material-ui/icons/OfflineBolt";
 import SettingsApplicationsIcon from "@material-ui/icons/SettingsApplications";
 
 const useStyles = makeStyles((theme) => ({
@@ -52,7 +50,8 @@ const Setting = () => {
   const classes = useStyles();
   const router = useRouter().pathname;
   const setting = {
-    vedor: "/setting/vendor",
+    vendor: "/setting/vendor",
+    cutoff: "/setting/cutoff",
   };
 
   const [state, setState] = useState({
@@ -78,7 +77,7 @@ const Setting = () => {
 
       <Collapse in={state.setting} timeout="auto" unmountOnExit>
         <List component="div" disablePadding dense={true}>
-          <Link href={setting.vedor}>
+          <Link href={setting.vendor}>
             <ListItem
               button
               className={clsx(classes.nested, {
@@ -89,6 +88,22 @@ const Setting = () => {
                 <EqualizerIcons />
               </ListItemIcon>
               <ListItemText primary="Vendor" />
+            </ListItem>
+          </Link>
+        </List>
+
+        <List component="div" disablePadding dense={true}>
+          <Link href={setting.cutoff}>
+            <ListItem
+              button
+              className={clsx(classes.nested, {
+                [classes.actived]: router == setting.cutoff,
+              })}
+            >
+              <ListItemIcon>
+                <OfflineBoltIcon />
+              </ListItemIcon>
+              <ListItemText primary="Cutoff" />
             </ListItem>
           </Link>
         </List>

@@ -55,7 +55,6 @@ const CostumeField = ({ name, required, control, errors }) => {
 };
 
 const FormVendor = ({ value, submit, loading }) => {
-  console.log(value);
   const classes = useStyles();
   const { handleSubmit, control, errors } = useForm({
     defaultValues: value ? value : defaultValues,
