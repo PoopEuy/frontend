@@ -131,28 +131,21 @@ const index = () => {
     let count = 0;
     obj.forEach((el) => {
       if (info[el] != newData[el]) {
-        const value = +newData[el];
-        if (Number.isInteger(value)) {
-          console.log(Number.isInteger(newData[el]));
-          count++;
-        }
+        if (+newData[el] > 0) count++;
       }
     });
+
     if (!info) {
       const obj1 = Object.keys(newData);
       obj1.forEach((el) => {
-        const value = +newData[el];
-        if (Number.isInteger(value)) {
-          console.log(Number.isInteger(newData[el]));
-          count++;
-        }
+        if (+newData[el] > 0) count++;
       });
+      if (count < 4) count = 0;
     }
-    console.log(count);
     if (count != 0) {
       setInfo(newData);
       const add = apiAddCutoff({ ...data, site: data.site.site });
-      add.then((e) => console.log(e)).catch((err) => console.log(err));
+      // add.then((e) => console.log(e)).catch((err) => console.log(err));
     }
   };
 
