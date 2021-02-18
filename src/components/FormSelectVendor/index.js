@@ -18,7 +18,6 @@ const VendorSelect = ({
     setState(dataVendor);
   }, [dataVendor]);
 
-  const df = { id: 1, name: "ado", pt: "Valtel" };
   return (
     <>
       {state && (

@@ -21,10 +21,8 @@ const Apt2Nojs = ({
     if (dataApt2Nojs && dataVendor) {
       const temp = [];
       dataApt2Nojs.forEach((el) => {
-        console.log(el);
         const mitra = dataVendor.find((e) => e.id == el.mitra);
         const gs = dataVendor.find((e) => e.id == el.gs);
-        console.log(gs);
         temp.push({
           nojs: el.nojs,
           site: el.site,
