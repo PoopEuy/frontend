@@ -59,6 +59,7 @@ const Apt2 = () => {
     detail: "/apt2/nojs/detail",
     sla: "/apt2/nojs/sla",
     sla2: "/apt2/nojs/sla2",
+    sla3: "/apt2/nojs/sla3",
     servicecalls: "/apt2/servicecall",
     prtg: {
       sla: "/apt2/prtg/sla",
@@ -209,6 +210,22 @@ const Apt2 = () => {
                     <DetailsIcon />
                   </ListItemIcon>
                   <ListItemText primary="Sla2" />
+                </ListItem>
+              </Link>
+            </List>
+
+            <List component="div" disablePadding dense={true}>
+              <Link href={apt2.sla3}>
+                <ListItem
+                  button
+                  className={clsx(classes.child, {
+                    [classes.actived]: router == apt2.sla3,
+                  })}
+                >
+                  <ListItemIcon>
+                    <DetailsIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Sla3" />
                 </ListItem>
               </Link>
             </List>
