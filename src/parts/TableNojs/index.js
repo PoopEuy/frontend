@@ -14,6 +14,8 @@ import TooltipComponent from "@components/TooltipComponent";
 
 import Swal from "sweetalert2"; //sweetalert2
 
+import { connect } from "react-redux";
+
 const TableNojs = ({
   getAptNojs,
   editAptNojs,
@@ -21,6 +23,7 @@ const TableNojs = ({
   dataNojs,
   errorNojs,
   titleTable,
+  dataVendor,
 }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [titleDialog, setTitleDialog] = useState(false);
@@ -42,11 +45,17 @@ const TableNojs = ({
     return result;
   };
 
-  const handleClick = (title, value) => {
+  const handleClick = (title, value, data) => {
     let temp =
       value == null
         ? false
         : nullTostring(dataNojs.find((e) => e.nojs == value));
+    const gs = dataVendor.find((e) => e.pt == temp.gs && e.phone == temp.no_gs);
+    const mitra = dataVendor.find(
+      (e) => e.pt == temp.mitra && e.phone == temp.no_mitra
+    );
+    temp.gs = gs;
+    temp.mitra = mitra;
     setRecords(temp);
     setTitleDialog(title);
     setOpenDialog(true);
@@ -92,11 +101,11 @@ const TableNojs = ({
           filter: false,
           sort: false,
           empty: true,
-          customBodyRender: (value) => {
+          customBodyRender: (value, data) => {
             return (
               <TooltipComponent
                 title={`Edit ${value}`}
-                onClick={() => handleClick(`EDIT ${value}`, value)}
+                onClick={() => handleClick(`EDIT ${value}`, value, data)}
                 color="inherit"
               >
                 <EditIcon />
@@ -142,4 +151,10 @@ TableNojs.propTypes = {
   titleTable: PropTypes.string.isRequired,
 };
 
-export default TableNojs;
+const mapStateToProps = (state) => {
+  return {
+    dataVendor: state.Setting.vendor,
+  };
+};
+
+export default connect(mapStateToProps, null)(TableNojs);
