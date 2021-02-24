@@ -24,25 +24,13 @@ const Apt2Nojs = ({
         const mitra = dataVendor.find((e) => e.id == el.mitra);
         const gs = dataVendor.find((e) => e.id == el.gs);
         temp.push({
-          nojs: el.nojs,
-          site: el.site,
-          provinsi: el.provinsi,
-          lc: el.lc,
+          ...el,
           mitra: mitra ? mitra.pt : "",
           no_mitra: mitra ? mitra.phone : "",
           ip: el.ip,
-          latitude: el.latitude,
-          longitude: el.longitude,
-          id_lvdvsat: el.id_lvd_vsat,
-          id_ping: el.id_ping,
-          id_batvolt: el.id_batt_volt,
-          id_vsatcurr: el.id_vsat_curr,
-          id_btscurr: el.id_bts_curr,
-          darat: el.darat,
           gs: gs ? gs.pt : "",
           no_gs: gs ? gs.phone : "",
           laut: el.laut,
-          udara: el.udara,
         });
       });
       setState(temp);

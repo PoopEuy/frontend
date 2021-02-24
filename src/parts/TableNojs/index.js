@@ -50,12 +50,17 @@ const TableNojs = ({
       value == null
         ? false
         : nullTostring(dataNojs.find((e) => e.nojs == value));
-    const gs = dataVendor.find((e) => e.pt == temp.gs && e.phone == temp.no_gs);
-    const mitra = dataVendor.find(
-      (e) => e.pt == temp.mitra && e.phone == temp.no_mitra
-    );
-    temp.gs = gs;
-    temp.mitra = mitra;
+
+    if (value) {
+      const gs = dataVendor.find(
+        (e) => e.pt == temp.gs && e.phone == temp.no_gs
+      );
+      const mitra = dataVendor.find(
+        (e) => e.pt == temp.mitra && e.phone == temp.no_mitra
+      );
+      temp.gs = gs;
+      temp.mitra = mitra;
+    }
     setRecords(temp);
     setTitleDialog(title);
     setOpenDialog(true);
@@ -76,15 +81,14 @@ const TableNojs = ({
   const submit = async (data) => {
     data = {
       ...data,
-      id_lvdvsat: data.id_lvdvsat == "" ? null : data.id_lvdvsat,
+      id_lvd_vsat: data.id_lvd_vsat == "" ? null : data.id_lvd_vsat,
       id_ping: data.id_ping == "" ? null : data.id_ping,
-      id_batvolt: data.id_batvolt == "" ? null : data.id_batvolt,
-      id_vsatcurr: data.id_vsatcurr == "" ? null : data.id_vsatcurr,
-      id_btscurr: data.id_btscurr == "" ? null : data.id_btscurr,
+      id_batt_volt: data.id_batt_volt == "" ? null : data.id_batt_volt,
+      id_vsat_curr: data.id_vsat_curr == "" ? null : data.id_vsat_curr,
+      id_bts_curr: data.id_bts_curr == "" ? null : +data.id_bts_curr,
       mitra: data.mitra ? data.mitra.id : null,
       gs: data.gs ? data.gs.id : null,
     };
-
     records ? await editAptNojs(data.nojs, data) : await addAptNojs(data);
     Swal.fire("success!", "Data has been saved!", "success");
     setOpenDialog(false);

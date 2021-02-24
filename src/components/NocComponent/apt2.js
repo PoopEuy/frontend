@@ -257,4 +257,8 @@ NocApt2Component.propTypes = {
   mppt3: PropTypes.bool,
 };
 
+NocApt2Component.defaultProps = {
+  capacity: { disk_used: 0, free_ram: 0 },
+};
+
 export default NocApt2Component;
