@@ -7,6 +7,8 @@ import { theme } from "../theme";
 import { wrapper } from "@redux/store";
 import Layout from "@parts/Layout";
 import ProgresBar from "@components/ProgresBar";
+import "react-calendar-timeline/lib/Timeline.css";
+
 // import "nprogress/nprogress.css";
 // NProgress.configure({ parent: "#barr" });
 const MyApp = (props) => {

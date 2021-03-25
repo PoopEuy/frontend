@@ -52,7 +52,7 @@ const index = ({
                   />
                 )}
                 onChange={(e, data) => {
-                  getData(data);
+                  getData && getData(data);
                   onChange(data);
                 }}
                 {...props}

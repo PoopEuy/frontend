@@ -201,3 +201,83 @@ export const apiAddCutoff = async (data) => {
 
   return result;
 };
+
+export const apiAddTicket = async (data) => {
+  const result = await instanceApt2
+    .post(`/api/ticket`, data)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((error) => {
+      return error.response.data;
+    });
+
+  return result;
+};
+
+export const apiEditTicket = async (id) => {
+  const result = await instanceApt2
+    .put(`/api/ticket/${id}`)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((error) => {
+      return error.response.data;
+    });
+
+  return result;
+};
+
+export const apiGetTicket = async (params) => {
+  const result = await instanceApt2
+    .get(`/api/ticket`, { params })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((error) => {
+      return error.message;
+    });
+
+  return result;
+};
+
+export const apiGetProgress = async (params) => {
+  const result = await instanceApt2
+    .get(`/api/progress`, { params })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((error) => {
+      return error.message;
+    });
+
+  return result;
+};
+
+export const apiAddProgress = async (data) => {
+  const result = await instanceApt2
+    .post(`/api/progress`, data)
+    .then((res) => {
+      console.log(res.data);
+      return res.data;
+    })
+    .catch((error) => {
+      return error.response.data;
+    });
+
+  return result;
+};
+
+export const apiPutProgress = async (id) => {
+  const result = await instanceApt2
+    .put(`/api/progress/${id}`)
+    .then((res) => {
+      console.log(res.data);
+      return res.data;
+    })
+    .catch((error) => {
+      return error.response.data;
+    });
+
+  return result;
+};

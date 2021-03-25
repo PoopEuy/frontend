@@ -20,6 +20,7 @@ import ExpandMoreIcons from "@material-ui/icons/ExpandMore";
 import EqualizerIcons from "@material-ui/icons/Equalizer";
 import OfflineBoltIcon from "@material-ui/icons/OfflineBolt";
 import SettingsApplicationsIcon from "@material-ui/icons/SettingsApplications";
+import ConfirmationNumberIcon from "@material-ui/icons/ConfirmationNumber";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -66,49 +67,69 @@ const Setting = () => {
   };
 
   return (
-    <Paper className={classes.paper} elevation={3}>
-      <ListItem button onClick={handleClick}>
-        <ListItemIcon>
-          <SettingsApplicationsIcon />
-        </ListItemIcon>
-        <ListItemText primary="Setting" />
-        {state.apt1 ? <ExpandLessIcons /> : <ExpandMoreIcons />}
-      </ListItem>
+    <>
+      <Paper className={classes.paper} elevation={3}>
+        <ListItem button onClick={handleClick}>
+          <ListItemIcon>
+            <SettingsApplicationsIcon />
+          </ListItemIcon>
+          <ListItemText primary="Setting" />
+          {state.apt1 ? <ExpandLessIcons /> : <ExpandMoreIcons />}
+        </ListItem>
 
-      <Collapse in={state.setting} timeout="auto" unmountOnExit>
+        <Collapse in={state.setting} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding dense={true}>
+            <Link href={setting.vendor}>
+              <ListItem
+                button
+                className={clsx(classes.nested, {
+                  [classes.actived]: router == setting.vendor,
+                })}
+              >
+                <ListItemIcon>
+                  <EqualizerIcons />
+                </ListItemIcon>
+                <ListItemText primary="Vendor" />
+              </ListItem>
+            </Link>
+          </List>
+
+          <List component="div" disablePadding dense={true}>
+            <Link href={setting.cutoff}>
+              <ListItem
+                button
+                className={clsx(classes.nested, {
+                  [classes.actived]: router == setting.cutoff,
+                })}
+              >
+                <ListItemIcon>
+                  <OfflineBoltIcon />
+                </ListItemIcon>
+                <ListItemText primary="Cutoff" />
+              </ListItem>
+            </Link>
+          </List>
+        </Collapse>
+      </Paper>
+
+      <Paper className={classes.paper} elevation={3}>
         <List component="div" disablePadding dense={true}>
-          <Link href={setting.vendor}>
+          <Link href="/ticket">
             <ListItem
               button
-              className={clsx(classes.nested, {
-                [classes.actived]: router == setting.vendor,
+              className={clsx({
+                [classes.actived]: router == "/ticket",
               })}
             >
               <ListItemIcon>
-                <EqualizerIcons />
+                <ConfirmationNumberIcon />
               </ListItemIcon>
-              <ListItemText primary="Vendor" />
+              <ListItemText primary="Ticket" />
             </ListItem>
           </Link>
         </List>
-
-        <List component="div" disablePadding dense={true}>
-          <Link href={setting.cutoff}>
-            <ListItem
-              button
-              className={clsx(classes.nested, {
-                [classes.actived]: router == setting.cutoff,
-              })}
-            >
-              <ListItemIcon>
-                <OfflineBoltIcon />
-              </ListItemIcon>
-              <ListItemText primary="Cutoff" />
-            </ListItem>
-          </Link>
-        </List>
-      </Collapse>
-    </Paper>
+      </Paper>
+    </>
   );
 };
 
