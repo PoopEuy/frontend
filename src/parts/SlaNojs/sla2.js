@@ -107,7 +107,7 @@ const Apt2NojsSla = ({ getSla, dataNojs, single, v3 }) => {
               dataTable={dataTable.data}
               error={dataTable.error}
               title="SLA 2 INTERNAL"
-              maxTable={600}
+              maxTable={2600}
             />
           </div>
         )}
