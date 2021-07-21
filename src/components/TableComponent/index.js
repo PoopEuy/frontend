@@ -70,7 +70,7 @@ TableComponent.propTypes = {
 };
 
 TableComponent.defaultProps = {
-  maxTable: 550,
+  maxTable: 1550,
 };
 
 // const mapStateToProps = (state) => {
