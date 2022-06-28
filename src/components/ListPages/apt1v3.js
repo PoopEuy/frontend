@@ -67,6 +67,7 @@ const Apt1v3 = () => {
     },
     capacity: "/apt1v3/capacity",
     program: "/apt1v3/program",
+    tvd: "/apt1v3/tvd",
   };
 
   const [state, setState] = useState({
@@ -263,6 +264,24 @@ const Apt1v3 = () => {
             </ListItem>
           </Link>
         </List>
+
+        {/* tambahan */}
+        <List component="div" disablePadding dense={true}>
+          <Link href={apt1v3.tvd}>
+            <ListItem
+              button
+              className={clsx(classes.nested, {
+                [classes.actived]: router == apt1v3.tvd,
+              })}
+            >
+              <ListItemIcon>
+                <CodeIcon />
+              </ListItemIcon>
+              <ListItemText primary="TVD" />
+            </ListItem>
+          </Link>
+        </List>
+        {/* end tambahan */}
 
         {/* <List component="div" disablePadding dense={true}>
           <ListItem

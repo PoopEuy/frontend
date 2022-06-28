@@ -137,7 +137,7 @@ const Apt2NojsSla = ({ getSla, dataNojs }) => {
             <TableComponent
               dataTable={dataTable.data}
               error={dataTable.error}
-              title="SLA NOC"
+              title="SLA NOC TVD"
               maxTable={600}
             />
           </div>

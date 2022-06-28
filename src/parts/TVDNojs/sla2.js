@@ -21,7 +21,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Apt2NojsSla = ({ getSla, dataNojs }) => {
+const Apt2NojsSla = ({ getSla, dataNojs, single, v3 }) => {
   const clasess = useStyles();
   const [loading, setLoading] = useState(false);
   const [dataTable, setDataTable] = useState({
@@ -30,9 +30,6 @@ const Apt2NojsSla = ({ getSla, dataNojs }) => {
   });
 
   const submit = (data) => {
-    const nojs = data.nojsMultiple;
-    const js = nojs.slice();
-    console.log("hasil js " + js);
     tempData = [];
     setDataTable({
       data: { columns: [], data: [] },
@@ -50,65 +47,35 @@ const Apt2NojsSla = ({ getSla, dataNojs }) => {
       data.end.getMinutes()
     )}:00`;
 
-    // while (js.length != 0) {
-    //   const temp = js.splice(0, 5);
-    //   const dataNojs = temp.slice();
+    const param = v3
+      ? {
+          nojs: data.nojs.id,
+          start: start,
+          end: end,
+          daily: true,
+        }
+      : {
+          nojs: data.nojs.nojs,
+          sdate: start,
+          edate: end,
+          detail: true,
+        };
 
-    //   temp = temp.map((a) => a.nojs);
-    //   const param = {
-    //     nojs: temp,
-    //     sdate: start,
-    //     edate: end,
-    //     data: dataNojs,
-    //   };
-    //   status++;
+    const result = getSla(param);
 
-    //   const result = getSla(param);
-    //   result.then((res) => {
-    //     if (!res.error) {
-    //       const data = jsonToTable(res.data);
-    //       tempColumns = data.columns;
-    //       tempData = tempData.concat(data.data);
-    //       setDataTable({
-    //         data: { columns: tempColumns, data: tempData },
-    //         error: false,
-    //       });
-    //       status--;
-
-    //       if (status == 0) {
-    //         return setLoading(false);
-    //       }
-    //     } else {
-    //       setDataTable({
-    //         ...dataTable,
-    //         error: true,
-    //       });
-    //       return setLoading(false);
-    //     }
-    //   });
-    // }
-    js.forEach((nojs) => {
-      const param = {
-        nojs: nojs.id,
-        start: start,
-        end: end,
-      };
-      status++;
-      const result = getSla(param);
-      result.then((res) => {
+    result
+      .then((res) => {
         if (!res.error) {
-          const data = jsonToTable(res.data.data);
+          const data = v3
+            ? jsonToTable(res.data.data)
+            : jsonToTable(res.data.daily);
           tempColumns = data.columns;
           tempData = tempData.concat(data.data);
           setDataTable({
             data: { columns: tempColumns, data: tempData },
             error: false,
           });
-          status--;
-
-          if (status == 0) {
-            return setLoading(false);
-          }
+          return setLoading(false);
         } else {
           setDataTable({
             ...dataTable,
@@ -116,10 +83,11 @@ const Apt2NojsSla = ({ getSla, dataNojs }) => {
           });
           return setLoading(false);
         }
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
       });
-    });
-
-    status == 0 && setLoading(false);
   };
 
   return (
@@ -130,6 +98,7 @@ const Apt2NojsSla = ({ getSla, dataNojs }) => {
             submit={submit}
             loading={loading}
             dataNojs={dataNojs}
+            single={single}
           />
         </div>
         {dataTable.data.data.length !== 0 && (
@@ -137,8 +106,8 @@ const Apt2NojsSla = ({ getSla, dataNojs }) => {
             <TableComponent
               dataTable={dataTable.data}
               error={dataTable.error}
-              title="SLA NOC"
-              maxTable={600}
+              title="SLA 2 INTERNAL"
+              maxTable={2600}
             />
           </div>
         )}
@@ -149,6 +118,11 @@ const Apt2NojsSla = ({ getSla, dataNojs }) => {
 
 Apt2NojsSla.propTypes = {
   getSla: PropTypes.func,
+  v3: PropTypes.bool,
+};
+
+Apt2NojsSla.defaultProps = {
+  v3: true,
 };
 
 export default Apt2NojsSla;
