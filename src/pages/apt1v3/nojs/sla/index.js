@@ -1,8 +1,8 @@
-import SlaNojs from "@parts/SlaNojs/apt2";
+import SlaNojs from "@parts/SlaNojs/apt1v3";
 import { apt1v3GetLoggerSla } from "@helpers/api/apt1v3";
 import { connect } from "react-redux";
 
-const Apt2NojsSla = ({ dataApt1v3Nojs }) => {
+const Apt1v3NojsSla = ({ dataApt1v3Nojs }) => {
   return <SlaNojs getSla={apt1v3GetLoggerSla} dataNojs={dataApt1v3Nojs} />;
 };
 
@@ -12,4 +12,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, null)(Apt2NojsSla);
+export default connect(mapStateToProps, null)(Apt1v3NojsSla);

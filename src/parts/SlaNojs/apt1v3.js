@@ -21,7 +21,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Apt2NojsSla = ({ getSla, dataNojs, single, v3 }) => {
+const Apt1v3NojsSla = ({ getSla, dataNojs }) => {
   const clasess = useStyles();
   const [loading, setLoading] = useState(false);
   const [dataTable, setDataTable] = useState({
@@ -31,6 +31,9 @@ const Apt2NojsSla = ({ getSla, dataNojs, single, v3 }) => {
   const [csvName, setCsvFileName] = useState();
 
   const submit = (data) => {
+    const nojs = data.nojsMultiple;
+    const js = nojs.slice();
+    console.log("hasil js " + js);
     tempData = [];
     setDataTable({
       data: { columns: [], data: [] },
@@ -42,53 +45,83 @@ const Apt2NojsSla = ({ getSla, dataNojs, single, v3 }) => {
     )}-${pad(data.start.getDate())} ${pad(data.start.getHours())}:${pad(
       data.start.getMinutes()
     )}:00`;
+
     const end = `${data.end.getFullYear()}-${pad(
       data.end.getMonth() + 1
     )}-${pad(data.end.getDate())} ${pad(data.end.getHours())}:${pad(
       data.end.getMinutes()
     )}:00`;
 
-    const siteName = data.nojs.site;
-    const startDate = `${data.start.getFullYear()}-${pad(
-      data.start.getMonth() + 1
-    )}-${pad(data.start.getDate())} `;
-    const endDate = `${data.end.getFullYear()}-${pad(
-      data.end.getMonth() + 1
-    )}-${pad(data.end.getDate())} `;
-
     const csvFileName =
-      "SLA2 INTERNAL " + siteName + " " + startDate + " sampai " + endDate;
+      "SLA1 APT1V3 " +
+      `${data.start.getFullYear()}-${pad(data.start.getMonth() + 1)}-${pad(
+        data.start.getDate()
+      )}` +
+      " sampai " +
+      `${data.end.getFullYear()}-${pad(data.end.getMonth() + 1)}-${pad(
+        data.end.getDate()
+      )}`;
     setCsvFileName(csvFileName);
 
-    const param = v3
-      ? {
-          nojs: data.nojs.id,
-          start: start,
-          end: end,
-          daily: true,
-        }
-      : {
-          nojs: data.nojs.nojs,
-          sdate: start,
-          edate: end,
-          detail: true,
-        };
+    // while (js.length != 0) {
+    //   const temp = js.splice(0, 5);
+    //   const dataNojs = temp.slice();
 
-    const result = getSla(param);
+    //   temp = temp.map((a) => a.nojs);
+    //   const param = {
+    //     nojs: temp,
+    //     sdate: start,
+    //     edate: end,
+    //     data: dataNojs,
+    //   };
+    //   status++;
 
-    result
-      .then((res) => {
+    //   const result = getSla(param);
+    //   result.then((res) => {
+    //     if (!res.error) {
+    //       const data = jsonToTable(res.data);
+    //       tempColumns = data.columns;
+    //       tempData = tempData.concat(data.data);
+    //       setDataTable({
+    //         data: { columns: tempColumns, data: tempData },
+    //         error: false,
+    //       });
+    //       status--;
+
+    //       if (status == 0) {
+    //         return setLoading(false);
+    //       }
+    //     } else {
+    //       setDataTable({
+    //         ...dataTable,
+    //         error: true,
+    //       });
+    //       return setLoading(false);
+    //     }
+    //   });
+    // }
+    js.forEach((nojs) => {
+      const param = {
+        nojs: nojs.id,
+        start: start,
+        end: end,
+      };
+      status++;
+      const result = getSla(param);
+      result.then((res) => {
         if (!res.error) {
-          const data = v3
-            ? jsonToTable(res.data.data)
-            : jsonToTable(res.data.daily);
+          const data = jsonToTable(res.data.data);
           tempColumns = data.columns;
           tempData = tempData.concat(data.data);
           setDataTable({
             data: { columns: tempColumns, data: tempData },
             error: false,
           });
-          return setLoading(false);
+          status--;
+
+          if (status == 0) {
+            return setLoading(false);
+          }
         } else {
           setDataTable({
             ...dataTable,
@@ -96,11 +129,10 @@ const Apt2NojsSla = ({ getSla, dataNojs, single, v3 }) => {
           });
           return setLoading(false);
         }
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
       });
+    });
+
+    status == 0 && setLoading(false);
   };
 
   return (
@@ -111,7 +143,6 @@ const Apt2NojsSla = ({ getSla, dataNojs, single, v3 }) => {
             submit={submit}
             loading={loading}
             dataNojs={dataNojs}
-            single={single}
           />
         </div>
         {dataTable.data.data.length !== 0 && (
@@ -120,7 +151,7 @@ const Apt2NojsSla = ({ getSla, dataNojs, single, v3 }) => {
               dataTable={dataTable.data}
               error={dataTable.error}
               title={csvName}
-              maxTable={2600}
+              maxTable={600}
             />
           </div>
         )}
@@ -129,13 +160,8 @@ const Apt2NojsSla = ({ getSla, dataNojs, single, v3 }) => {
   );
 };
 
-Apt2NojsSla.propTypes = {
+Apt1v3NojsSla.propTypes = {
   getSla: PropTypes.func,
-  v3: PropTypes.bool,
 };
 
-Apt2NojsSla.defaultProps = {
-  v3: true,
-};
-
-export default Apt2NojsSla;
+export default Apt1v3NojsSla;

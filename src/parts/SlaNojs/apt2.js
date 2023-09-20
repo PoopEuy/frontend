@@ -28,6 +28,7 @@ const Apt2NojsSla = ({ getSla, dataNojs }) => {
     data: { columns: [], data: [] },
     error: false,
   });
+  const [csvName, setCsvFileName] = useState();
 
   const submit = (data) => {
     const nojs = data.nojsMultiple;
@@ -49,6 +50,17 @@ const Apt2NojsSla = ({ getSla, dataNojs }) => {
     )}-${pad(data.end.getDate())} ${pad(data.end.getHours())}:${pad(
       data.end.getMinutes()
     )}:00`;
+
+    const csvFileName =
+      "SLA1 APT2 " +
+      `${data.start.getFullYear()}-${pad(data.start.getMonth() + 1)}-${pad(
+        data.start.getDate()
+      )}` +
+      " sampai " +
+      `${data.end.getFullYear()}-${pad(data.end.getMonth() + 1)}-${pad(
+        data.end.getDate()
+      )}`;
+    setCsvFileName(csvFileName);
 
     // while (js.length != 0) {
     //   const temp = js.splice(0, 5);
@@ -137,7 +149,7 @@ const Apt2NojsSla = ({ getSla, dataNojs }) => {
             <TableComponent
               dataTable={dataTable.data}
               error={dataTable.error}
-              title="SLA NOC"
+              title={csvName}
               maxTable={600}
             />
           </div>

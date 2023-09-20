@@ -28,6 +28,7 @@ const Apt1NojsSla = ({ getSla, dataNojs }) => {
     data: { columns: [], data: [] },
     error: false,
   });
+  const [csvName, setCsvFileName] = useState();
 
   const submit = (data) => {
     const nojs = data.nojsMultiple;
@@ -48,6 +49,9 @@ const Apt1NojsSla = ({ getSla, dataNojs }) => {
     )}-${pad(data.end.getDate())} ${pad(data.end.getHours())}:${pad(
       data.end.getMinutes()
     )}:00`;
+
+    const csvFileName = "SLA1 APT1OLD " + start + " sampai " + end;
+    setCsvFileName(csvFileName);
 
     while (js.length != 0) {
       const temp = js.splice(0, 5);
@@ -104,7 +108,7 @@ const Apt1NojsSla = ({ getSla, dataNojs }) => {
             <TableComponent
               dataTable={dataTable.data}
               error={dataTable.error}
-              title="SLA NOC"
+              title={csvName}
               maxTable={600}
             />
           </div>
