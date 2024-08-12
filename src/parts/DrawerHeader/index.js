@@ -40,7 +40,8 @@ import {
   setDarkModeLocalStorage,
 } from "src/configThemeMode";
 import { themeConfig } from "src/theme";
-import Clock from "@components/Clock";
+// import Clock from "@components/Clock";
+import ClockNavbar from "@components/ClockNavbar";
 import TooltipComponent from "@components/TooltipComponent";
 
 const drawerWidth = 240;
@@ -177,7 +178,7 @@ const DrawerHeader = ({ listPage, mainPage, noc }) => {
             <TooltipComponent title="Logout">
               <ExitToAppIcon />
             </TooltipComponent>
-            {matches && <Clock />}
+            {matches && <ClockNavbar />}
           </Toolbar>
         </AppBar>
         <Drawer
